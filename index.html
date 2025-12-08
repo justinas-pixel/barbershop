@@ -1183,26 +1183,560 @@
   const SUPABASE_URL = "https://ovayawxvgownebxboqnx.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  async function testSupabase() {
-    const { data, error } = await supabase
-      .from("services")
-      .select("*")
-      .order("price_eur", { ascending: true });
+    // --- Demo data: produktai (kol kas laikom vietoje) ---
+    const products = [
+      {
+        id: "pomade_matte",
+        name: "Matinė plaukų pomada",
+        price: 15.9,
+        size: "100 ml",
+        description: "Vidutinės fiksacijos, matinė apdaila.",
+        tags: ["Plaukams", "Matinė"]
+      },
+      {
+        id: "beard_oil",
+        name: "Barzdos aliejus",
+        price: 17.5,
+        size: "50 ml",
+        description: "Minkština ir drėkina barzdą bei odą.",
+        tags: ["Barzdai", "Drėkinimas"]
+      },
+      {
+        id: "shampoo",
+        name: "Kasdienis šampūnas",
+        price: 12.0,
+        size: "250 ml",
+        description: "Švelniai valo, be SLS.",
+        tags: ["Plaukams", "Kasdienis"]
+      },
+      {
+        id: "aftershave",
+        name: "Aftershave balzamas",
+        price: 14.5,
+        size: "100 ml",
+        description: "Ramindantis balzamas po skutimosi.",
+        tags: ["Skutimuisi", "Raminantis"]
+      }
+    ];
 
-    if (error) {
-      console.error("Supabase klaida:", error);
-    } else {
-      console.log("Paslaugos iš Supabase:", data);
+    // Paslaugos ir meistrai bus imami iš Supabase
+    let services = [];
+    let barbers = [];
+    let selectedServiceId = null;
+
+    // Krepšelis ir paskutinė rezervacija – dar localStorage
+    let cart = JSON.parse(localStorage.getItem("barber_cart") || "[]");
+    let lastBooking = JSON.parse(localStorage.getItem("barber_last_booking") || "null");
+
+    // --- DOM nuorodos ---
+    const servicesList = document.getElementById("servicesList");
+    const productsList = document.getElementById("productsList");
+    const cartCount = document.getElementById("cartCount");
+    const cartModal = document.getElementById("cartModal");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const cartInfo = document.getElementById("cartInfo");
+    const serviceSelect = document.getElementById("serviceSelect");
+    const barberSelect = document.getElementById("barberSelect");
+    const selectedServiceBadge = document.getElementById("selectedServiceBadge").querySelector("strong");
+    const leftTitle = document.getElementById("leftTitle");
+    const leftSubtitle = document.getElementById("leftSubtitle");
+    const summaryContent = document.getElementById("summaryContent");
+    const summaryTotal = document.getElementById("summaryTotal");
+    const yearSpan = document.getElementById("yearSpan");
+    yearSpan.textContent = new Date().getFullYear();
+
+    // Tag'ai pagal paslaugos pavadinimą (tik UI grožiui)
+    const tagsByServiceName = {
+      "Standartinis kirpimas": ["Kirpimas", "Stilizacija"],
+      "Fade / Skin fade": ["Fade", "Kontūrai"],
+      "Barzdos formavimas": ["Barzda", "Formavimas"],
+      "Kirpimas + Barzda": ["Pilnas paketas"]
+    };
+
+    // --- Helperiai ---
+    function formatPrice(value) {
+      return value.toFixed(2).replace(".", ",") + " €";
     }
-  }
 
-  testSupabase();
-</script>
+    function updateCartStorage() {
+      localStorage.setItem("barber_cart", JSON.stringify(cart));
+    }
+
+    function updateBookingStorage() {
+      if (lastBooking) {
+        localStorage.setItem("barber_last_booking", JSON.stringify(lastBooking));
+      }
+    }
+
+    function renderCartIndicator() {
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartCount.textContent = totalQty;
+    }
+
+    // --- Supabase užklausos ---
+    async function loadServicesFromSupabase() {
+      const { data, error } = await supabase
+        .from("services")
+        .select("*")
+        .order("price_eur", { ascending: true });
+
+      if (error) {
+        console.error("Nepavyko nuskaityti paslaugų iš Supabase:", error);
+        return;
+      }
+
+      services = data.map(row => {
+        const tags = tagsByServiceName[row.name] || [];
+        return {
+          id: row.id,
+          name: row.name,
+          duration: row.duration_minutes,
+          price: Number(row.price_eur),
+          description: row.description || "",
+          tags
+        };
+      });
+
+      if (!selectedServiceId && services.length > 0) {
+        selectedServiceId = services[0].id;
+      }
+    }
+
+    async function loadBarbersFromSupabase() {
+      const { data, error } = await supabase
+        .from("barbers")
+        .select("*")
+        .eq("is_active", true)
+        .order("name", { ascending: true });
+
+      if (error) {
+        console.error("Nepavyko nuskaityti meistrų iš Supabase:", error);
+        return;
+      }
+
+      barbers = data || [];
+    }
+
+    // --- UI renderinimas ---
+    function renderServices() {
+      servicesList.innerHTML = "";
+      if (services.length === 0) {
+        servicesList.innerHTML = '<div class="helper">Paslaugų sąrašas dar tuščias.</div>';
+        return;
+      }
+
+      services.forEach(service => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+
+        const main = document.createElement("div");
+        main.className = "list-item-main";
+
+        const title = document.createElement("div");
+        title.className = "list-item-title";
+        title.textContent = service.name;
+
+        const meta = document.createElement("div");
+        meta.className = "list-item-meta";
+        meta.textContent = `${service.duration} min • ${formatPrice(service.price)}`;
+
+        const desc = document.createElement("div");
+        desc.className = "list-item-meta";
+        desc.textContent = service.description;
+
+        const tags = document.createElement("div");
+        tags.className = "list-item-tags";
+        (service.tags || []).forEach(t => {
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.textContent = t;
+          tags.appendChild(span);
+        });
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(desc);
+        main.appendChild(tags);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "6px";
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = formatPrice(service.price);
+
+        const btn = document.createElement("button");
+        btn.className = "btn-primary";
+        btn.textContent = "Rezervuoti";
+        btn.addEventListener("click", () => {
+          selectedServiceId = service.id;
+          updateSelectedServiceUI();
+          document.querySelector('[data-pane="bookingPane"]').click();
+          document.querySelector('[data-section="booking"]').click();
+          document.getElementById("nameInput").focus();
+        });
+
+        right.appendChild(price);
+        right.appendChild(btn);
+
+        item.appendChild(main);
+        item.appendChild(right);
+
+        servicesList.appendChild(item);
+      });
+    }
+
+    function renderProducts() {
+      productsList.innerHTML = "";
+      products.forEach(product => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+
+        const main = document.createElement("div");
+        main.className = "list-item-main";
+
+        const title = document.createElement("div");
+        title.className = "list-item-title";
+        title.textContent = product.name;
+
+        const meta = document.createElement("div");
+        meta.className = "list-item-meta";
+        meta.textContent = `${product.size} • ${formatPrice(product.price)}`;
+
+        const desc = document.createElement("div");
+        desc.className = "list-item-meta";
+        desc.textContent = product.description;
+
+        const tags = document.createElement("div");
+        tags.className = "list-item-tags";
+        product.tags.forEach(t => {
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.textContent = t;
+          tags.appendChild(span);
+        });
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(desc);
+        main.appendChild(tags);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "6px";
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = formatPrice(product.price);
+
+        const btn = document.createElement("button");
+        btn.className = "btn-primary";
+        btn.textContent = "Į krepšelį";
+        btn.addEventListener("click", () => addToCart(product.id));
+
+        right.appendChild(price);
+        right.appendChild(btn);
+
+        item.appendChild(main);
+        item.appendChild(right);
+
+        productsList.appendChild(item);
+      });
+    }
+
+    function populateServiceSelect() {
+      serviceSelect.innerHTML = "";
+      services.forEach(s => {
+        const option = document.createElement("option");
+        option.value = s.id;
+        option.textContent = `${s.name} (${s.duration} min • ${formatPrice(s.price)})`;
+        serviceSelect.appendChild(option);
+      });
+      if (selectedServiceId && services.some(s => s.id === selectedServiceId)) {
+        serviceSelect.value = selectedServiceId;
+      }
+    }
+
+    function populateBarberSelect() {
+      barberSelect.innerHTML = "";
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Pasirink meistrą";
+      barberSelect.appendChild(placeholder);
+
+      barbers.forEach(b => {
+        const option = document.createElement("option");
+        option.value = b.id;
+        option.textContent = b.name;
+        barberSelect.appendChild(option);
+      });
+    }
+
+    function updateSelectedServiceUI() {
+      if (!selectedServiceId) return;
+      const service = services.find(s => s.id === selectedServiceId);
+      if (!service) return;
+      selectedServiceBadge.textContent = service.name;
+      serviceSelect.value = selectedServiceId;
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      const existing = cart.find(i => i.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+      }
+      updateCartStorage();
+      renderCartIndicator();
+      renderSummary();
+    }
+
+    function renderCartModal() {
+      cartItems.innerHTML = "";
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<div class="helper">Krepšelis tuščias.</div>';
+        cartTotal.textContent = formatPrice(0);
+        return;
+      }
+      let total = 0;
+
+      cart.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "cart-item";
+
+        const main = document.createElement("div");
+        main.className = "cart-item-main";
+
+        const title = document.createElement("div");
+        title.className = "cart-item-title";
+        title.textContent = item.name;
+
+        const meta = document.createElement("div");
+        meta.className = "cart-item-meta";
+        meta.textContent = formatPrice(item.price);
+
+        main.appendChild(title);
+        main.appendChild(meta);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "4px";
+
+        const qty = document.createElement("div");
+        qty.className = "qty";
+        const minus = document.createElement("button");
+        minus.textContent = "−";
+        minus.addEventListener("click", () => {
+          item.qty -= 1;
+          if (item.qty <= 0) {
+            cart = cart.filter(i => i.id !== item.id);
+          }
+          updateCartStorage();
+          renderCartIndicator();
+          renderCartModal();
+          renderSummary();
+        });
+        const plus = document.createElement("button");
+        plus.textContent = "+";
+        plus.addEventListener("click", () => {
+          item.qty += 1;
+          updateCartStorage();
+          renderCartIndicator();
+          renderCartModal();
+          renderSummary();
+        });
+        const qtyLabel = document.createElement("span");
+        qtyLabel.textContent = item.qty;
+        qty.appendChild(minus);
+        qty.appendChild(qtyLabel);
+        qty.appendChild(plus);
+
+        const lineTotal = document.createElement("div");
+        lineTotal.className = "price";
+        const linePrice = item.price * item.qty;
+        lineTotal.textContent = formatPrice(linePrice);
+
+        right.appendChild(qty);
+        right.appendChild(lineTotal);
+
+        row.appendChild(main);
+        row.appendChild(right);
+
+        cartItems.appendChild(row);
+
+        total += linePrice;
+      });
+
+      cartTotal.textContent = formatPrice(total);
+    }
+
+    function renderSummary() {
+      if (lastBooking) {
+        const { name, phone, date, time, serviceName, barberName } = lastBooking;
+        summaryContent.innerHTML = `
+          <strong>Artimiausias vizitas:</strong><br />
+          ${date} ${time} – ${serviceName}<br />
+          Meistras: ${barberName}<br />
+          Klientas: ${name} (${phone})
+        `;
+      } else {
+        summaryContent.textContent =
+          "Dar nėra rezervacijų. Užpildyk formą, ir čia matysi savo artimiausią vizitą.";
+      }
+
+      if (cart.length === 0) {
+        summaryTotal.textContent = "Krepšelis tuščias.";
+      } else {
+        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        summaryTotal.textContent = `Prekių krepšelis: ${formatPrice(total)}`;
+      }
+    }
+
+    // --- Event listeneriai ---
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const section = btn.dataset.section;
+        if (section === "services") {
+          document.getElementById("servicesSection").classList.remove("hidden");
+          document.getElementById("productsSection").classList.add("hidden");
+          leftTitle.textContent = "Paslaugos";
+          leftSubtitle.textContent = "Pasirink tinkamiausią kirpimą ar procedūrą.";
+        } else if (section === "products") {
+          document.getElementById("servicesSection").classList.add("hidden");
+          document.getElementById("productsSection").classList.remove("hidden");
+          leftTitle.textContent = "Produktai";
+          leftSubtitle.textContent = "Profesionali plaukų ir barzdos priežiūra namuose.";
+        } else if (section === "booking") {
+          document.querySelector(".right-column").scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+    document.querySelectorAll(".toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const pane = btn.dataset.pane;
+        document.getElementById("bookingPane").classList.add("hidden");
+        document.getElementById("summaryPane").classList.add("hidden");
+        document.getElementById(pane).classList.remove("hidden");
+      });
+    });
+
+    document.getElementById("openCart").addEventListener("click", () => {
+      cartModal.classList.remove("hidden");
+      renderCartModal();
+    });
+
+    document.getElementById("closeCart").addEventListener("click", () => {
+      cartModal.classList.add("hidden");
+    });
+
+    cartModal.addEventListener("click", (e) => {
+      if (e.target === cartModal) {
+        cartModal.classList.add("hidden");
+      }
+    });
+
+    document.getElementById("checkoutBtn").addEventListener("click", () => {
+      cartInfo.textContent =
+        "Šioje vietoje gali prijungti apmokėjimo sprendimą (Paysera, Stripe, PayPal ar pan.).";
+    });
+
+    serviceSelect.addEventListener("change", () => {
+      selectedServiceId = serviceSelect.value;
+      updateSelectedServiceUI();
+    });
+
+    document.getElementById("bookingForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("bookingStatus");
+      status.textContent = "";
+      status.className = "status";
+
+      const service = services.find(s => s.id === serviceSelect.value);
+      const barberId = barberSelect.value;
+      const barber = barbers.find(b => b.id === barberId);
+      const date = document.getElementById("dateInput").value;
+      const time = document.getElementById("timeInput").value;
+      const name = document.getElementById("nameInput").value.trim();
+      const phone = document.getElementById("phoneInput").value.trim();
+      const note = document.getElementById("noteInput").value.trim();
+
+      if (!service || !barber || !date || !time || !name || !phone) {
+        status.textContent = "Užpildyk visus privalomus laukus.";
+        status.classList.add("error");
+        return;
+      }
+
+      // Kol kas tik išsaugom localStorage – DB rezervaciją darysim kitame žingsnyje
+      lastBooking = {
+        serviceId: service.id,
+        serviceName: service.name,
+        duration: service.duration,
+        price: service.price,
+        barberId: barber.id,
+        barberName: barber.name,
+        date,
+        time,
+        name,
+        phone,
+        note
+      };
+      updateBookingStorage();
+      renderSummary();
+
+      status.textContent = "Rezervacija užregistruota (vietiškai). Kitame žingsnyje išsaugosim į Supabase.";
+      status.classList.add("success");
+    });
+
+    // --- Inicijavimas ---
+    async function init() {
+      // Supabase duomenys
+      await Promise.all([
+        loadServicesFromSupabase(),
+        loadBarbersFromSupabase()
+      ]);
+
+      renderServices();
+      renderProducts();
+      populateServiceSelect();
+      populateBarberSelect();
+      updateSelectedServiceUI();
+      renderCartIndicator();
+      renderSummary();
+
+      // datai – min = šiandien
+      const dateInput = document.getElementById("dateInput");
+      const today = new Date().toISOString().split("T")[0];
+      dateInput.min = today;
+    }
+
+    init();
+  </script>
+</body>
+</html>
 
 
 </body>
 </html>
+
 
 
