@@ -1665,47 +1665,103 @@
       updateSelectedServiceUI();
     });
 
-    document.getElementById("bookingForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const status = document.getElementById("bookingStatus");
-      status.textContent = "";
-      status.className = "status";
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const status = document.getElementById("bookingStatus");
+  status.textContent = "";
+  status.className = "status";
 
-      const service = services.find(s => s.id === serviceSelect.value);
-      const barberId = barberSelect.value;
-      const barber = barbers.find(b => b.id === barberId);
-      const date = document.getElementById("dateInput").value;
-      const time = document.getElementById("timeInput").value;
-      const name = document.getElementById("nameInput").value.trim();
-      const phone = document.getElementById("phoneInput").value.trim();
-      const note = document.getElementById("noteInput").value.trim();
+  const submitBtn = e.target.querySelector("button[type='submit']");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Pateikiama...";
 
-      if (!service || !barber || !date || !time || !name || !phone) {
-        status.textContent = "Užpildyk visus privalomus laukus.";
-        status.classList.add("error");
-        return;
-      }
+  try {
+    const service = services.find(s => s.id === serviceSelect.value);
+    const barberId = barberSelect.value;
+    const barber = barbers.find(b => b.id === barberId);
+    const date = document.getElementById("dateInput").value;
+    const time = document.getElementById("timeInput").value;
+    const name = document.getElementById("nameInput").value.trim();
+    const phone = document.getElementById("phoneInput").value.trim();
+    const note = document.getElementById("noteInput").value.trim();
 
-      // Kol kas tik išsaugom localStorage – DB rezervaciją darysim kitame žingsnyje
-      lastBooking = {
-        serviceId: service.id,
-        serviceName: service.name,
-        duration: service.duration,
-        price: service.price,
-        barberId: barber.id,
-        barberName: barber.name,
-        date,
-        time,
+    if (!service || !barber || !date || !time || !name || !phone) {
+      status.textContent = "Užpildyk visus privalomus laukus.";
+      status.classList.add("error");
+      return;
+    }
+
+    // 1. Suskaičiuojam laiką
+    const startDateTime = new Date(`${date}T${time}:00`);
+    const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
+
+    // 2. Sukuriam klientą Supabase
+    const { data: customer, error: customerError } = await supabase
+      .from("customers")
+      .insert({
         name,
-        phone,
-        note
-      };
-      updateBookingStorage();
-      renderSummary();
+        phone
+      })
+      .select()
+      .single();
 
-      status.textContent = "Rezervacija užregistruota (vietiškai). Kitame žingsnyje išsaugosim į Supabase.";
-      status.classList.add("success");
-    });
+    if (customerError) {
+      console.error(customerError);
+      status.textContent = "Nepavyko išsaugoti kliento duomenų.";
+      status.classList.add("error");
+      return;
+    }
+
+    // 3. Sukuriam rezervaciją Supabase
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .insert({
+        customer_id: customer.id,
+        barber_id: barber.id,
+        service_id: service.id,
+        start_time: startDateTime.toISOString(),
+        end_time: endDateTime.toISOString(),
+        status: "pending",
+        note
+      })
+      .select()
+      .single();
+
+    if (bookingError) {
+      console.error(bookingError);
+      status.textContent = "Nepavyko išsaugoti rezervacijos.";
+      status.classList.add("error");
+      return;
+    }
+
+    // 4. Atnaujinam vietinę suvestinę
+    lastBooking = {
+      id: booking.id,
+      serviceName: service.name,
+      barberName: barber.name,
+      date,
+      time,
+      name,
+      phone
+    };
+
+    updateBookingStorage();
+    renderSummary();
+
+    // 🔥 SUCCESS
+    status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
+    status.classList.add("success");
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "⚠ Įvyko klaida. Bandyk dar kartą.";
+    status.classList.add("error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Patvirtinti rezervaciją";
+  }
+});
+
 
     // --- Inicijavimas ---
     async function init() {
@@ -1737,6 +1793,7 @@
 
 </body>
 </html>
+
 
 
 
