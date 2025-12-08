@@ -1176,5 +1176,32 @@
     const today = new Date().toISOString().split("T")[0];
     dateInput.min = today;
   </script>
+  <script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  // Tavo duomenys:
+  const SUPABASE_URL = "https://ovayawxvgownebxboqnx.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_YvwTCJKi_0hwmUPxXRqajQ_UNTF9MOA";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function testSupabase() {
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .order("price_eur", { ascending: true });
+
+    if (error) {
+      console.error("Supabase klaida:", error);
+    } else {
+      console.log("Paslaugos iš Supabase:", data);
+    }
+  }
+
+  testSupabase();
+</script>
+
+
 </body>
 </html>
+
