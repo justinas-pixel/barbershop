@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Barber Shop E-shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050608;
+      --bg-alt: #111318;
+      --accent: #f5b041;
+      --accent-dark: #d68910;
+      --text: #f9f9f9;
+      --muted: #aaaaaa;
+      --danger: #e74c3c;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #202332 0, #050608 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 16px 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .logo-text span:first-child {
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    .logo-text span:last-child {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      border-radius: 999px;
+      border: 1px solid #26293a;
+      background: rgba(10,11,18,0.8);
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    nav button:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    nav button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-color: transparent;
+      color: #111;
+      font-weight: 600;
+    }
+
+    .cart-button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: none;
+      background: #181b26;
+      padding: 8px 12px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+    }
+
+    .cart-badge {
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #111;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top, #23263a 0, #101218 45%, #050608 100%);
+      border-radius: var(--radius);
+      padding: 16px 16px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.05);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 450px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .list-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      background: rgba(5,6,12,0.8);
+      border: 1px solid rgba(255,255,255,0.03);
+      align-items: center;
+    }
+
+    .list-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .list-item-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .list-item-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .list-item-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+
+    .price {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #111;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      background: #080812;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      border-radius: 12px;
+      resize: vertical;
+      min-height: 50px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .field-inline {
+      display: flex;
+      gap: 8px;
+    }
+
+    .field-inline > div {
+      flex: 1;
+    }
+
+    .helper {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .badge-service {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(245,176,65,0.12);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .section-toggle {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .section-toggle button {
+      flex: 1;
+      min-width: 110px;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .section-toggle button.active {
+      background: rgba(245,176,65,0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Cart modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .modal {
+      background: #05060b;
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-height: 75vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-body {
+      margin-top: 6px;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      padding: 8px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .cart-item-main {
+      flex: 1;
+    }
+
+    .cart-item-title {
+      font-weight: 500;
+    }
+
+    .cart-item-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .qty button {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .cart-footer {
+      border-top: 1px dashed rgba(255,255,255,0.16);
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .total {
+      font-weight: 600;
+    }
+
+    .label-small {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .status.success {
+      color: #2ecc71;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    footer {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">B</div>
+        <div class="logo-text">
+          <span>Barber Studio</span>
+          <span>Vyriški kirpimai &amp; groomingas</span>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-section="services">Paslaugos</button>
+        <button class="nav-btn" data-section="products">Produktai</button>
+        <button class="nav-btn" data-section="booking">Rezervacija</button>
+      </nav>
+      <button class="cart-button" id="openCart">
+        🛒 Krepšelis
+        <span class="cart-badge" id="cartCount">0</span>
+      </button>
+    </header>
+
+    <main>
+      <!-- Left column: services/products -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="leftTitle">Paslaugos</div>
+            <div class="card-subtitle" id="leftSubtitle">
+              Pasirink tinkamiausią kirpimą ar procedūrą.
+            </div>
+          </div>
+          <span class="pill">Online užsakymas</span>
+        </div>
+
+        <div id="servicesSection">
+          <div class="list" id="servicesList"><!-- JS --></div>
+        </div>
+
+        <div id="productsSection" class="hidden">
+          <div class="list" id="productsList"><!-- JS --></div>
+        </div>
+      </section>
+
+      <!-- Right column: booking & summary -->
+      <section class="right-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Rezervacija</div>
+              <div class="card-subtitle">
+                Užsirezervuok laiką tiesiogiai internetu.
+              </div>
+            </div>
+            <span class="badge-service" id="selectedServiceBadge">
+              <span>Paslauga: </span><strong>Standartinis kirpimas</strong>
+            </span>
+          </div>
+
+          <div class="section-toggle">
+            <button class="toggle-btn active" data-pane="bookingPane">Laiko rezervacija</button>
+            <button class="toggle-btn" data-pane="summaryPane">Krepšelis &amp; suvestinė</button>
+          </div>
+
+          <!-- Booking pane -->
+          <div id="bookingPane">
+            <form id="bookingForm">
+              <div class="field-group">
+                <label for="serviceSelect">Paslauga</label>
+                <select id="serviceSelect" required></select>
+                <div class="helper">Paslaugos trukmė ir kaina atnaujinama automatiškai.</div>
+              </div>
+
+              <div class="field-group">
+                <label for="barberSelect">Meistras</label>
+                <select id="barberSelect" required>
+                  <option value="">Pasirink meistrą</option>
+                  <option value="Mantas">Mantas</option>
+                  <option value="Karolis">Karolis</option>
+                  <option value="Lina">Lina</option>
+                </select>
+              </div>
+
+              <div class="field-group field-inline">
+                <div>
+                  <label for="dateInput">Data</label>
+                  <input type="date" id="dateInput" required />
+                </div>
+                <div>
+                  <label for="timeInput">Laikas</label>
+                  <input type="time" id="timeInput" required />
+                  <div class="helper">Darbo laikas: 10:00–20:00</div>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="nameInput">Vardas</label>
+                <input type="text" id="nameInput" placeholder="Vardenis" required />
+              </div>
+
+              <div class="field-group">
+                <label for="phoneInput">Telefono numeris</label>
+                <input type="tel" id="phoneInput" placeholder="+370..." required />
+              </div>
+
+              <div class="field-group">
+                <label for="noteInput">Komentaras (nebūtina)</label>
+                <textarea id="noteInput" placeholder="Pvz. trumpai šonuose, ilgesnė viršus."></textarea>
+              </div>
+
+              <div class="field-group">
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">
+                  Patvirtinti rezervaciją
+                </button>
+              </div>
+              <div id="bookingStatus" class="status"></div>
+            </form>
+          </div>
+
+          <!-- Summary pane -->
+          <div id="summaryPane" class="hidden">
+            <div class="field-group">
+              <label class="label-small">Trumpa suvestinė</label>
+              <div id="summaryContent" class="helper">
+                Dar nėra rezervacijų. Užpildyk formą, ir čia matysi savo artimiausią vizitą.
+              </div>
+            </div>
+            <div class="field-group" style="margin-top: 16px;">
+              <label class="label-small">Krepšelio suma</label>
+              <div id="summaryTotal" class="helper">Krepšelis tuščias.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Kontaktai &amp; vieta</div>
+          </div>
+          <div class="field-group">
+            <div class="helper">
+              📍 Gedimino pr. 1, Vilnius<br />
+              ⏰ I–V 10:00–20:00, VI 10:00–17:00<br />
+              📞 +370 600 00000
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="yearSpan"></span> Barber Studio – visos teisės saugomos.
+    </footer>
+  </div>
+
+  <!-- Cart modal -->
+  <div id="cartModal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Krepšelis</div>
+          <div class="card-subtitle">Peržiūrėk pasirinktas prekes prieš apmokėjimą.</div>
+        </div>
+        <button class="btn-outline" id="closeCart">Uždaryti</button>
+      </div>
+      <div class="modal-body" id="cartItems"></div>
+      <div class="cart-footer">
+        <div>
+          <div class="label-small">Iš viso</div>
+          <div class="total" id="cartTotal">0.00 €</div>
+        </div>
+        <button class="btn-primary" id="checkoutBtn">
+          Tęsti užsakymą
+        </button>
+      </div>
+      <div id="cartInfo" class="helper">
+        Apmokėjimo funkcija pavyzdyje nėra įdiegta – čia galėsi prijungti Paysera, PayPal ar bankinį apmokėjimą.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Demo data ---
+    const services = [
+      {
+        id: "standard_haircut",
+        name: "Standartinis kirpimas",
+        duration: 45,
+        price: 25,
+        description: "Vyriškas kirpimas + stilizavimas.",
+        tags: ["Kirpimas", "Stilizacija"]
+      },
+      {
+        id: "fade_haircut",
+        name: "Fade / Skin fade",
+        duration: 60,
+        price: 30,
+        description: "Šiuolaikiškas fade kirpimas su kontūrais.",
+        tags: ["Fade", "Kontūrai"]
+      },
+      {
+        id: "beard_trim",
+        name: "Barzdos formavimas",
+        duration: 30,
+        price: 18,
+        description: "Barzdos kirpimas, formavimas ir prižiūra.",
+        tags: ["Barzda", "Formavimas"]
+      },
+      {
+        id: "combo",
+        name: "Kirpimas + Barzda",
+        duration: 75,
+        price: 40,
+        description: "Pilnas įvaizdžio atnaujinimas.",
+        tags: ["Pilnas paketas"]
+      }
+    ];
+
+    const products = [
+      {
+        id: "pomade_matte",
+        name: "Matinė plaukų pomada",
+        price: 15.9,
+        size: "100 ml",
+        description: "Vidutinės fiksacijos, matinė apdaila.",
+        tags: ["Plaukams", "Matinė"]
+      },
+      {
+        id: "beard_oil",
+        name: "Barzdos aliejus",
+        price: 17.5,
+        size: "50 ml",
+        description: "Minkština ir drėkina barzdą bei odą.",
+        tags: ["Barzdai", "Drėkinimas"]
+      },
+      {
+        id: "shampoo",
+        name: "Kasdienis šampūnas",
+        price: 12.0,
+        size: "250 ml",
+        description: "Švelniai valo, be SLS.",
+        tags: ["Plaukams", "Kasdienis"]
+      },
+      {
+        id: "aftershave",
+        name: "Aftershave balzamas",
+        price: 14.5,
+        size: "100 ml",
+        description: "Ramindantis balzamas po skutimosi.",
+        tags: ["Skutimuisi", "Raminantis"]
+      }
+    ];
+
+    // --- State ---
+    let selectedServiceId = services[0].id;
+    let cart = JSON.parse(localStorage.getItem("barber_cart") || "[]");
+    let lastBooking = JSON.parse(localStorage.getItem("barber_last_booking") || "null");
+
+    // --- DOM refs ---
+    const servicesList = document.getElementById("servicesList");
+    const productsList = document.getElementById("productsList");
+    const cartCount = document.getElementById("cartCount");
+    const cartModal = document.getElementById("cartModal");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const cartInfo = document.getElementById("cartInfo");
+    const serviceSelect = document.getElementById("serviceSelect");
+    const selectedServiceBadge = document.getElementById("selectedServiceBadge").querySelector("strong");
+    const leftTitle = document.getElementById("leftTitle");
+    const leftSubtitle = document.getElementById("leftSubtitle");
+    const summaryContent = document.getElementById("summaryContent");
+    const summaryTotal = document.getElementById("summaryTotal");
+    const yearSpan = document.getElementById("yearSpan");
+
+    yearSpan.textContent = new Date().getFullYear();
+
+    // --- Helpers ---
+    function formatPrice(value) {
+      return value.toFixed(2).replace(".", ",") + " €";
+    }
+
+    function updateCartStorage() {
+      localStorage.setItem("barber_cart", JSON.stringify(cart));
+    }
+
+    function updateBookingStorage() {
+      if (lastBooking) {
+        localStorage.setItem("barber_last_booking", JSON.stringify(lastBooking));
+      }
+    }
+
+    function renderCartIndicator() {
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartCount.textContent = totalQty;
+    }
+
+    function renderServices() {
+      servicesList.innerHTML = "";
+      services.forEach(service => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+
+        const main = document.createElement("div");
+        main.className = "list-item-main";
+
+        const title = document.createElement("div");
+        title.className = "list-item-title";
+        title.textContent = service.name;
+
+        const meta = document.createElement("div");
+        meta.className = "list-item-meta";
+        meta.textContent = `${service.duration} min • ${formatPrice(service.price)}`;
+
+        const desc = document.createElement("div");
+        desc.className = "list-item-meta";
+        desc.textContent = service.description;
+
+        const tags = document.createElement("div");
+        tags.className = "list-item-tags";
+        service.tags.forEach(t => {
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.textContent = t;
+          tags.appendChild(span);
+        });
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(desc);
+        main.appendChild(tags);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "6px";
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = formatPrice(service.price);
+
+        const btn = document.createElement("button");
+        btn.className = "btn-primary";
+        btn.textContent = "Rezervuoti";
+        btn.addEventListener("click", () => {
+          selectedServiceId = service.id;
+          updateSelectedServiceUI();
+          document.querySelector('[data-pane="bookingPane"]').click();
+          document.querySelector('[data-section="booking"]').click();
+          document.getElementById("nameInput").focus();
+        });
+
+        right.appendChild(price);
+        right.appendChild(btn);
+
+        item.appendChild(main);
+        item.appendChild(right);
+
+        servicesList.appendChild(item);
+      });
+    }
+
+    function renderProducts() {
+      productsList.innerHTML = "";
+      products.forEach(product => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+
+        const main = document.createElement("div");
+        main.className = "list-item-main";
+
+        const title = document.createElement("div");
+        title.className = "list-item-title";
+        title.textContent = product.name;
+
+        const meta = document.createElement("div");
+        meta.className = "list-item-meta";
+        meta.textContent = `${product.size} • ${formatPrice(product.price)}`;
+
+        const desc = document.createElement("div");
+        desc.className = "list-item-meta";
+        desc.textContent = product.description;
+
+        const tags = document.createElement("div");
+        tags.className = "list-item-tags";
+        product.tags.forEach(t => {
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.textContent = t;
+          tags.appendChild(span);
+        });
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(desc);
+        main.appendChild(tags);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "6px";
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = formatPrice(product.price);
+
+        const btn = document.createElement("button");
+        btn.className = "btn-primary";
+        btn.textContent = "Į krepšelį";
+        btn.addEventListener("click", () => addToCart(product.id));
+
+        right.appendChild(price);
+        right.appendChild(btn);
+
+        item.appendChild(main);
+        item.appendChild(right);
+
+        productsList.appendChild(item);
+      });
+    }
+
+    function populateServiceSelect() {
+      serviceSelect.innerHTML = "";
+      services.forEach(s => {
+        const option = document.createElement("option");
+        option.value = s.id;
+        option.textContent = `${s.name} (${s.duration} min • ${formatPrice(s.price)})`;
+        serviceSelect.appendChild(option);
+      });
+      serviceSelect.value = selectedServiceId;
+    }
+
+    function updateSelectedServiceUI() {
+      const service = services.find(s => s.id === selectedServiceId);
+      if (!service) return;
+      selectedServiceBadge.textContent = service.name;
+      serviceSelect.value = selectedServiceId;
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      const existing = cart.find(i => i.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+      }
+      updateCartStorage();
+      renderCartIndicator();
+      renderSummary();
+    }
+
+    function renderCartModal() {
+      cartItems.innerHTML = "";
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<div class="helper">Krepšelis tuščias.</div>';
+        cartTotal.textContent = formatPrice(0);
+        return;
+      }
+      let total = 0;
+
+      cart.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "cart-item";
+
+        const main = document.createElement("div");
+        main.className = "cart-item-main";
+
+        const title = document.createElement("div");
+        title.className = "cart-item-title";
+        title.textContent = item.name;
+
+        const meta = document.createElement("div");
+        meta.className = "cart-item-meta";
+        meta.textContent = formatPrice(item.price);
+
+        main.appendChild(title);
+        main.appendChild(meta);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.style.gap = "4px";
+
+        const qty = document.createElement("div");
+        qty.className = "qty";
+        const minus = document.createElement("button");
+        minus.textContent = "−";
+        minus.addEventListener("click", () => {
+          item.qty -= 1;
+          if (item.qty <= 0) {
+            cart = cart.filter(i => i.id !== item.id);
+          }
+          updateCartStorage();
+          renderCartIndicator();
+          renderCartModal();
+          renderSummary();
+        });
+        const plus = document.createElement("button");
+        plus.textContent = "+";
+        plus.addEventListener("click", () => {
+          item.qty += 1;
+          updateCartStorage();
+          renderCartIndicator();
+          renderCartModal();
+          renderSummary();
+        });
+        const qtyLabel = document.createElement("span");
+        qtyLabel.textContent = item.qty;
+        qty.appendChild(minus);
+        qty.appendChild(qtyLabel);
+        qty.appendChild(plus);
+
+        const lineTotal = document.createElement("div");
+        lineTotal.className = "price";
+        const linePrice = item.price * item.qty;
+        lineTotal.textContent = formatPrice(linePrice);
+
+        right.appendChild(qty);
+        right.appendChild(lineTotal);
+
+        row.appendChild(main);
+        row.appendChild(right);
+
+        cartItems.appendChild(row);
+
+        total += linePrice;
+      });
+
+      cartTotal.textContent = formatPrice(total);
+    }
+
+    function renderSummary() {
+      if (lastBooking) {
+        const { name, phone, date, time, serviceName, barber } = lastBooking;
+        summaryContent.innerHTML = `
+          <strong>Artimiausias vizitas:</strong><br />
+          ${date} ${time} – ${serviceName}<br />
+          Meistras: ${barber}<br />
+          Klientas: ${name} (${phone})
+        `;
+      } else {
+        summaryContent.textContent =
+          "Dar nėra rezervacijų. Užpildyk formą, ir čia matysi savo artimiausią vizitą.";
+      }
+
+      if (cart.length === 0) {
+        summaryTotal.textContent = "Krepšelis tuščias.";
+      } else {
+        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        summaryTotal.textContent = `Prekių krepšelis: ${formatPrice(total)}`;
+      }
+    }
+
+    // --- Event listeners ---
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const section = btn.dataset.section;
+        if (section === "services") {
+          document.getElementById("servicesSection").classList.remove("hidden");
+          document.getElementById("productsSection").classList.add("hidden");
+          leftTitle.textContent = "Paslaugos";
+          leftSubtitle.textContent = "Pasirink tinkamiausią kirpimą ar procedūrą.";
+        } else if (section === "products") {
+          document.getElementById("servicesSection").classList.add("hidden");
+          document.getElementById("productsSection").classList.remove("hidden");
+          leftTitle.textContent = "Produktai";
+          leftSubtitle.textContent = "Profesionali plaukų ir barzdos priežiūra namuose.";
+        } else if (section === "booking") {
+          // scroll to booking
+          document.querySelector(".right-column").scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+    document.querySelectorAll(".toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const pane = btn.dataset.pane;
+        document.getElementById("bookingPane").classList.add("hidden");
+        document.getElementById("summaryPane").classList.add("hidden");
+        document.getElementById(pane).classList.remove("hidden");
+      });
+    });
+
+    document.getElementById("openCart").addEventListener("click", () => {
+      cartModal.classList.remove("hidden");
+      renderCartModal();
+    });
+
+    document.getElementById("closeCart").addEventListener("click", () => {
+      cartModal.classList.add("hidden");
+    });
+
+    cartModal.addEventListener("click", (e) => {
+      if (e.target === cartModal) {
+        cartModal.classList.add("hidden");
+      }
+    });
+
+    document.getElementById("checkoutBtn").addEventListener("click", () => {
+      cartInfo.textContent =
+        "Šioje vietoje gali prijungti apmokėjimo sprendimą (Paysera, Stripe, PayPal ar pan.).";
+    });
+
+    serviceSelect.addEventListener("change", () => {
+      selectedServiceId = serviceSelect.value;
+      updateSelectedServiceUI();
+    });
+
+    document.getElementById("bookingForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("bookingStatus");
+      status.textContent = "";
+      status.className = "status";
+
+      const service = services.find(s => s.id === serviceSelect.value);
+      const barber = document.getElementById("barberSelect").value;
+      const date = document.getElementById("dateInput").value;
+      const time = document.getElementById("timeInput").value;
+      const name = document.getElementById("nameInput").value.trim();
+      const phone = document.getElementById("phoneInput").value.trim();
+      const note = document.getElementById("noteInput").value.trim();
+
+      if (!service || !barber || !date || !time || !name || !phone) {
+        status.textContent = "Užpildyk visus privalomus laukus.";
+        status.classList.add("error");
+        return;
+      }
+
+      // Simple "save"
+      lastBooking = {
+        serviceId: service.id,
+        serviceName: service.name,
+        duration: service.duration,
+        price: service.price,
+        barber,
+        date,
+        time,
+        name,
+        phone,
+        note
+      };
+      updateBookingStorage();
+      renderSummary();
+
+      status.textContent = "Rezervacija užregistruota! Susisieksime, jei reikės patikslinimo.";
+      status.classList.add("success");
+
+      // Optionally: clear note only
+      // document.getElementById("noteInput").value = "";
+    });
+
+    // --- Init ---
+    renderServices();
+    renderProducts();
+    populateServiceSelect();
+    updateSelectedServiceUI();
+    renderCartIndicator();
+    renderSummary();
+
+    // Set min date for date input to today
+    const dateInput = document.getElementById("dateInput");
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+  </script>
+</body>
+</html>
