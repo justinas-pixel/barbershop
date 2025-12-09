@@ -1405,9 +1405,15 @@
   const slots = [];
   if (!service || !date) return slots;
 
-  const openTime = "10:00";  // TODO: vėliau galėsim daryti iš DB
-  const closeTime = "20:00";
-  const stepMinutes = 15;    // kas 15 min. siūlomi laikai
+  const openTime = "10:00";  // darbo pradžia
+  const closeTime = "20:00"; // darbo pabaiga
+
+  // 60 min paslaugoms – kas valandą
+  // 30 min ir 90 min – kas pusvalandį
+  let stepMinutes = 60;
+  if (service.duration === 30 || service.duration === 90) {
+    stepMinutes = 30;
+  }
 
   const start = new Date(`${date}T${openTime}:00`);
   const end = new Date(`${date}T${closeTime}:00`);
@@ -1430,11 +1436,15 @@
       available: !overlaps
     });
 
+    // judam per pasirinktą žingsnį (valanda arba pusvalandis)
     current = new Date(current.getTime() + stepMinutes * 60000);
   }
 
   return slots;
 }
+
+
+  
 
     // Surandam esamą klientą pagal telefoną arba sukuriam naują
 async function findOrCreateCustomer(name, phone) {
@@ -2065,6 +2075,7 @@ dateInput.addEventListener("change", () => {
 
 </body>
 </html>
+
 
 
 
