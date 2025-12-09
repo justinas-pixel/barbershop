@@ -1783,6 +1783,23 @@ function renderTimeSlots(slots) {
         }
       });
     });
+    // Paslaugos pasirinkimas – atnaujinam UI ir laisvus laikus
+serviceSelect.addEventListener("change", () => {
+  selectedServiceId = serviceSelect.value;
+  updateSelectedServiceUI();
+  updateAvailableTimeSlots(); // 👈 čia kviečiam mūsų funkciją
+});
+
+// Meistro pasirinkimas – atnaujinam laisvus laikus
+barberSelect.addEventListener("change", () => {
+  updateAvailableTimeSlots();
+});
+
+// Datos pasirinkimas – atnaujinam laisvus laikus
+dateInput.addEventListener("change", () => {
+  updateAvailableTimeSlots();
+});
+
 
     document.querySelectorAll(".toggle-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1972,6 +1989,7 @@ function renderTimeSlots(slots) {
 
 </body>
 </html>
+
 
 
 
