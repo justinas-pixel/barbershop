@@ -1974,25 +1974,49 @@ dateInput.addEventListener("change", () => {
       return;
     }
 
-    // 3. Sukuriam klientą Supabase
-
-    const { data: customer, error: customerError } = await supabase
-      .from("customers")
-      .insert({
-        name,
-        phone
-      })
-      .select()
-      .single();
-
-    if (customerError) {
-      console.error(customerError);
-      status.textContent = "Nepavyko išsaugoti kliento duomenų.";
+        // 3. surandam arba sukuriam klientą pagal telefoną
+    let customer;
+    try {
+      customer = await findOrCreateCustomer(name, phone);
+    } catch (err) {
+      console.error(err);
+      status.textContent = "Nepavyko išsaugoti / patikrinti kliento.";
       status.classList.add("error");
       return;
     }
 
-    // 3. Sukuriam rezervaciją Supabase
+    // 4. Taisyklė: jei jau yra aktyvi rezervacija, nauja ne anksčiau kaip po 2 savaičių
+    try {
+      const { allowed, message } = await checkCustomerBookingLimit(customer.id, startDateTime);
+      if (!allowed) {
+        status.textContent = message || "Šiuo metu nauja rezervacija negalima.";
+        status.classList.add("error");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      status.textContent = "Nepavyko patikrinti esamų rezervacijų.";
+      status.classList.add("error");
+      return;
+    }
+
+    // 5. sukuriam rezervaciją Supabase
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .insert({
+        customer_id: customer.id,
+        barber_id: barber.id,
+        service_id: service.id,
+        start_time: startDateTime.toISOString(),
+        end_time: endDateTime.toISOString(),
+        status: "pending",
+        note
+      })
+      .select()
+      .single();
+
+
+    // 6. Sukuriam rezervaciją Supabase
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
       .insert({
@@ -2014,7 +2038,7 @@ dateInput.addEventListener("change", () => {
       return;
     }
 
-    // 4. Atnaujinam vietinę suvestinę
+    // 7. Atnaujinam vietinę suvestinę
     lastBooking = {
       id: booking.id,
       serviceName: service.name,
@@ -2073,6 +2097,7 @@ dateInput.addEventListener("change", () => {
 
 </body>
 </html>
+
 
 
 
