@@ -799,12 +799,19 @@
       "Kirpimas + Barzda": ["Pilnas paketas"]
     };
 
-    // --- Helperiai ---
+       // --- Helperiai ---
+    function pad2(n) {
+      return n.toString().padStart(2, "0");
+    }
 
-    
+    function formatTimeHHMM(date) {
+      return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+    }
+
     function formatPrice(value) {
       return value.toFixed(2).replace(".", ",") + " €";
     }
+
 
     function updateCartStorage() {
       localStorage.setItem("barber_cart", JSON.stringify(cart));
@@ -1571,6 +1578,7 @@ dateInput.addEventListener("change", () => {
   </script>
 </body>
 </html>
+
 
 
 
