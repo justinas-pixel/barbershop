@@ -587,16 +587,18 @@
               </div>
 
               <div class="field-group field-inline">
-                <div>
-                  <label for="dateInput">Data</label>
-                  <input type="date" id="dateInput" required />
-                </div>
-                <div>
-                  <label for="timeInput">Laikas</label>
-                  <input type="time" id="timeInput" required />
-                  <div class="helper">Darbo laikas: 10:00–20:00</div>
-                </div>
-              </div>
+  <div>
+    <label for="dateInput">Data</label>
+    <input type="date" id="dateInput" required />
+  </div>
+  <div>
+    <label for="timeInput">Laikas</label>
+    <input type="time" id="timeInput" required />
+    <div class="helper">Darbo laikas: 10:00–20:00. Spausk ant laisvo laiko žemiau.</div>
+    <div id="timeSlots" class="time-slots"></div>
+  </div>
+</div>
+
 
               <div class="field-group">
                 <label for="nameInput">Vardas</label>
@@ -1816,6 +1818,7 @@
 
 </body>
 </html>
+
 
 
 
