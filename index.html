@@ -815,6 +815,15 @@
     yearSpan.textContent = new Date().getFullYear();
 
     // --- Helpers ---
+
+        function pad2(n) {
+      return n.toString().padStart(2, "0");
+    }
+
+    function formatTimeHHMM(date) {
+      return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+    }
+
     function formatPrice(value) {
       return value.toFixed(2).replace(".", ",") + " €";
     }
@@ -1855,6 +1864,7 @@
 
 </body>
 </html>
+
 
 
 
