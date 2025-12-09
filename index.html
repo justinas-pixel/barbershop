@@ -1161,9 +1161,11 @@
     });
 
     serviceSelect.addEventListener("change", () => {
-      selectedServiceId = serviceSelect.value;
-      updateSelectedServiceUI();
-    });
+  selectedServiceId = serviceSelect.value;
+  updateSelectedServiceUI();
+  updateAvailableTimeSlots();
+});
+
 
     document.getElementById("bookingForm").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -1970,6 +1972,7 @@ function renderTimeSlots(slots) {
 
 </body>
 </html>
+
 
 
 
