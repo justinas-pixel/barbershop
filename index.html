@@ -1907,16 +1907,6 @@ dateInput.addEventListener("change", () => {
       }
     });
 
-    document.getElementById("checkoutBtn").addEventListener("click", () => {
-      cartInfo.textContent =
-        "Šioje vietoje gali prijungti apmokėjimo sprendimą (Paysera, Stripe, PayPal ar pan.).";
-    });
-
-    serviceSelect.addEventListener("change", () => {
-      selectedServiceId = serviceSelect.value;
-      updateSelectedServiceUI();
-    });
-
     document.getElementById("bookingForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const status = document.getElementById("bookingStatus");
@@ -1931,8 +1921,8 @@ dateInput.addEventListener("change", () => {
     const service = services.find(s => s.id === serviceSelect.value);
     const barberId = barberSelect.value;
     const barber = barbers.find(b => b.id === barberId);
-    const date = document.getElementById("dateInput").value;
-    const time = document.getElementById("timeInput").value;
+    const date = dateInput.value;
+    const time = timeInput.value;
     const name = document.getElementById("nameInput").value.trim();
     const phone = document.getElementById("phoneInput").value.trim();
     const note = document.getElementById("noteInput").value.trim();
@@ -1947,7 +1937,7 @@ dateInput.addEventListener("change", () => {
     const startDateTime = new Date(`${date}T${time}:00`);
     const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
 
-        // 2. Patikrinam, ar šis laikas laisvas šiam meistrui
+    // 2. Patikrinam, ar meistras tuo laiku laisvas
     const { data: conflicts, error: conflictError } = await supabase
       .from("bookings")
       .select("id, start_time, end_time")
@@ -1969,7 +1959,7 @@ dateInput.addEventListener("change", () => {
       return;
     }
 
-        // 3. surandam arba sukuriam klientą pagal telefoną
+    // 3. Surandam arba sukuriam klientą pagal telefoną
     let customer;
     try {
       customer = await findOrCreateCustomer(name, phone);
@@ -1995,23 +1985,7 @@ dateInput.addEventListener("change", () => {
       return;
     }
 
-    // 5. sukuriam rezervaciją Supabase
-    const { data: booking, error: bookingError } = await supabase
-      .from("bookings")
-      .insert({
-        customer_id: customer.id,
-        barber_id: barber.id,
-        service_id: service.id,
-        start_time: startDateTime.toISOString(),
-        end_time: endDateTime.toISOString(),
-        status: "pending",
-        note
-      })
-      .select()
-      .single();
-
-
-    // 6. Sukuriam rezervaciją Supabase
+    // 5. Sukuriam rezervaciją Supabase (ČIA VIENINTELIS 'booking')
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
       .insert({
@@ -2033,7 +2007,7 @@ dateInput.addEventListener("change", () => {
       return;
     }
 
-    // 7. Atnaujinam vietinę suvestinę
+    // 6. Atnaujinam vietinę suvestinę
     lastBooking = {
       id: booking.id,
       serviceName: service.name,
@@ -2041,16 +2015,14 @@ dateInput.addEventListener("change", () => {
       date,
       time,
       name,
-      phone
+      phone,
+      note
     };
-
     updateBookingStorage();
     renderSummary();
 
-    // 🔥 SUCCESS
     status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
     status.classList.add("success");
-
   } catch (err) {
     console.error(err);
     status.textContent = "⚠ Įvyko klaida. Bandyk dar kartą.";
@@ -2060,6 +2032,7 @@ dateInput.addEventListener("change", () => {
     submitBtn.textContent = "Patvirtinti rezervaciją";
   }
 });
+
 
 
     // --- Inicijavimas ---
@@ -2092,6 +2065,7 @@ dateInput.addEventListener("change", () => {
 
 </body>
 </html>
+
 
 
 
