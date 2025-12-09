@@ -1695,7 +1695,30 @@
     const startDateTime = new Date(`${date}T${time}:00`);
     const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
 
-    // 2. Sukuriam klientą Supabase
+        // 2. Patikrinam, ar šis laikas laisvas šiam meistrui
+    const { data: conflicts, error: conflictError } = await supabase
+      .from("bookings")
+      .select("id, start_time, end_time")
+      .eq("barber_id", barber.id)
+      .in("status", ["pending", "confirmed"])
+      .lt("start_time", endDateTime.toISOString())
+      .gt("end_time", startDateTime.toISOString());
+
+    if (conflictError) {
+      console.error(conflictError);
+      status.textContent = "Nepavyko patikrinti laiko užimtumo. Bandyk dar kartą.";
+      status.classList.add("error");
+      return;
+    }
+
+    if (conflicts && conflicts.length > 0) {
+      status.textContent = "Šis meistras šiuo laiku jau turi rezervaciją. Pasirink kitą laiką.";
+      status.classList.add("error");
+      return;
+    }
+
+    // 3. Sukuriam klientą Supabase
+
     const { data: customer, error: customerError } = await supabase
       .from("customers")
       .insert({
@@ -1793,6 +1816,7 @@
 
 </body>
 </html>
+
 
 
 
