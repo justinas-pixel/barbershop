@@ -1548,6 +1548,35 @@ const email = document.getElementById("emailInput").value.trim() || null;
     updateBookingStorage();
     renderSummary();
 
+    // 7. Pabandome iškviesti edge funkciją, kad išsiųstų email
+    try {
+      await fetch(
+        "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Supabase edge functions reikalauja Authorization + apikey
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            apikey: SUPABASE_ANON_KEY,
+          },
+          body: JSON.stringify({
+            toEmail: "justinas.vaickus@gmail.com", // kol neturim email lauko formoje
+            toName: name,
+            phone,
+            date,
+            time,
+            serviceName: service.name,
+            barberName: barber.name,
+            note,
+          }),
+        }
+      );
+    } catch (err) {
+      console.error("Klaida siunčiant patvirtinimo email:", err);
+      // kliento nebaidom – rezervacija jau sėkminga, laiškas tiesiog nepavyko
+    }
+    
     status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
     status.classList.add("success");
   } catch (err) {
@@ -1588,6 +1617,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
   </script>
 </body>
 </html>
+
 
 
 
