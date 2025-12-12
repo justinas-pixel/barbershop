@@ -1489,7 +1489,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
     // 3. Surandam arba sukuriam klientą pagal telefoną
     let customer;
     try {
-      customer = await findOrCreateCustomer(name, phone);
+      customer = await findOrCreateCustomer(name, phone, email);
     } catch (err) {
       console.error(err);
       status.textContent = "Nepavyko išsaugoti / patikrinti kliento.";
@@ -1588,6 +1588,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
   </script>
 </body>
 </html>
+
 
 
 
