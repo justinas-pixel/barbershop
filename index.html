@@ -1450,7 +1450,8 @@ dateInput.addEventListener("change", () => {
     const date = dateInput.value;
     const time = timeInput.value;
     const name = document.getElementById("nameInput").value.trim();
-    const phone = document.getElementById("phoneInput").value.trim();
+const phone = document.getElementById("phoneInput").value.trim();
+const email = document.getElementById("emailInput").value.trim() || null;
     const note = document.getElementById("noteInput").value.trim();
 
     if (!service || !barber || !date || !time || !name || !phone) {
@@ -1587,6 +1588,7 @@ dateInput.addEventListener("change", () => {
   </script>
 </body>
 </html>
+
 
 
 
