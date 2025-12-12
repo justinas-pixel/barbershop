@@ -958,8 +958,8 @@
 
   
 
-    // Surandam esamą klientą pagal telefoną arba sukuriam naują
-async function findOrCreateCustomer(name, phone) {
+   // Surandam esamą klientą pagal telefoną arba sukuriam naują
+async function findOrCreateCustomer(name, phone, email) {
   const { data: existing, error: findError } = await supabase
     .from("customers")
     .select("*")
@@ -974,11 +974,14 @@ async function findOrCreateCustomer(name, phone) {
   if (existing && existing.length > 0) {
     const customer = existing[0];
 
-    // jei pasikeitė vardas – atnaujinam (nebūtina, bet gražu)
-    if (customer.name !== name) {
+    const updates = {};
+    if (customer.name !== name) updates.name = name;
+    if (email && customer.email !== email) updates.email = email;
+
+    if (Object.keys(updates).length > 0) {
       await supabase
         .from("customers")
-        .update({ name })
+        .update(updates)
         .eq("id", customer.id);
     }
 
@@ -987,7 +990,7 @@ async function findOrCreateCustomer(name, phone) {
 
   const { data: inserted, error: insertError } = await supabase
     .from("customers")
-    .insert({ name, phone })
+    .insert({ name, phone, email })
     .select()
     .single();
 
@@ -998,6 +1001,7 @@ async function findOrCreateCustomer(name, phone) {
 
   return inserted;
 }
+
 
 // Patikrinam 2 savaičių taisyklę
 async function checkCustomerBookingLimit(customerId, startDateTime) {
@@ -1583,6 +1587,7 @@ dateInput.addEventListener("change", () => {
   </script>
 </body>
 </html>
+
 
 
 
