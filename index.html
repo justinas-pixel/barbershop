@@ -1548,38 +1548,39 @@ const email = document.getElementById("emailInput").value.trim() || null;
     updateBookingStorage();
     renderSummary();
 
-    // 7. Iškviečiam edge funkciją (email patvirtinimas) – jeigu nepavyksta, rezervacija vistiek lieka
-(async () => {
-  try {
-    await fetch(
-      "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-          // SVARBU: kol kas NENAUDOK Authorization/apikey, kad nekristų CORS
-        },
-        body: JSON.stringify({
-          toEmail: document.getElementById("emailInput")?.value?.trim() || "justinas.vaickus@gmail.com",
-          toName: name,
-          phone,
-          date,
-          time,
-          serviceName: service.name,
-          barberName: barber.name,
-          note,
-        }),
-      }
-    );
-  } catch (err) {
-    console.error("Klaida siunčiant patvirtinimo email:", err);
-  }
-})();
+// 7. Iškviečiam edge funkciją (email patvirtinimas) – jei nepavyksta, rezervacija vistiek lieka
+try {
+  const res = await fetch(
+    "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+        // kol kas NENAUDOK Authorization/apikey (CORS)
+      },
+      body: JSON.stringify({
+        toEmail: email || "justinas.vaickus@gmail.com",
+        toName: name,
+        phone,
+        date,
+        time,
+        serviceName: service.name,
+        barberName: barber.name,
+        note,
+      }),
+    }
+  );
+
+  // jei nori – pamatyk atsakymą:
+  // console.log("Email funkcijos atsakymas:", await res.text());
+} catch (err) {
+  console.error("Klaida siunčiant patvirtinimo email:", err);
+}
 
 
 
       // kliento nebaidom – rezervacija jau sėkminga, laiškas tiesiog nepavyko
-    }
+  
     
     status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
     status.classList.add("success");
@@ -1621,6 +1622,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
   </script>
 </body>
 </html>
+
 
 
 
