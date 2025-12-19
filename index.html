@@ -1497,22 +1497,8 @@ const email = document.getElementById("emailInput").value.trim() || null;
       return;
     }
 
-    // 4. Taisyklė: jei jau yra aktyvi rezervacija, nauja ne anksčiau kaip po 2 savaičių
-    try {
-      const { allowed, message } = await checkCustomerBookingLimit(customer.id, startDateTime);
-      if (!allowed) {
-        status.textContent = message || "Šiuo metu nauja rezervacija negalima.";
-        status.classList.add("error");
-        return;
-      }
-    } catch (err) {
-      console.error(err);
-      status.textContent = "Nepavyko patikrinti esamų rezervacijų.";
-      status.classList.add("error");
-      return;
-    }
-
-    // 5. Sukuriam rezervaciją Supabase (ČIA VIENINTELIS 'booking')
+   
+    // 4. Sukuriam rezervaciją Supabase (ČIA VIENINTELIS 'booking')
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
       .insert({
@@ -1534,7 +1520,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
       return;
     }
 
-    // 6. Atnaujinam vietinę suvestinę
+    // 5. Atnaujinam vietinę suvestinę
     lastBooking = {
       id: booking.id,
       serviceName: service.name,
@@ -1548,7 +1534,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
     updateBookingStorage();
     renderSummary();
 
-// 7. Iškviečiam edge funkciją (email patvirtinimas) – jei nepavyksta, rezervacija vistiek lieka
+// 6. Iškviečiam edge funkciją (email patvirtinimas) – jei nepavyksta, rezervacija vistiek lieka
 try {
   const res = await fetch(
     "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
@@ -1622,6 +1608,7 @@ try {
   </script>
 </body>
 </html>
+
 
 
 
