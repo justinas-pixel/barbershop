@@ -1003,49 +1003,6 @@ async function findOrCreateCustomer(name, phone, email) {
 }
 
 
-// Patikrinam 2 savaičių taisyklę
-async function checkCustomerBookingLimit(customerId, startDateTime) {
-  const now = new Date();
-  const twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
-
-  const { data: existingBookings, error } = await supabase
-    .from("bookings")
-    .select("id, start_time, status")
-    .eq("customer_id", customerId)
-    .in("status", ["pending", "confirmed"])
-    .gte("start_time", now.toISOString());
-
-  if (error) {
-    console.error("Klaida tikrinant kliento rezervacijas:", error);
-    throw new Error("Nepavyko patikrinti esamų rezervacijų");
-  }
-
-  // Jei yra bent viena aktyvi ateities rezervacija IR naujas laikas per artimas
-  if (existingBookings && existingBookings.length > 0 && startDateTime < twoWeeksFromNow) {
-    const nearest = existingBookings
-      .map(b => new Date(b.start_time))
-      .sort((a, b) => a - b)[0];
-
-    const dateStr = nearest.toLocaleDateString("lt-LT", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-    const timeStr = nearest.toLocaleTimeString("lt-LT", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-    return {
-      allowed: false,
-      message: `Jau turite aktyvią rezervaciją ${dateStr} ${timeStr}. Naują laiką galite rezervuoti ne anksčiau kaip po 14 dienų arba atšaukę esamą rezervaciją.`
-    };
-  }
-
-  return { allowed: true };
-}
-
 function renderTimeSlots(slots) {
   timeSlotsContainer.innerHTML = "";
 
@@ -1608,6 +1565,7 @@ try {
   </script>
 </body>
 </html>
+
 
 
 
