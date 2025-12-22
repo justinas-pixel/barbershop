@@ -730,6 +730,37 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // kad galėtum testuoti per DevTools:
+window.supabase = supabase;
+
+// MAGIC LINK (email)
+async function loginWithEmail(email) {
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Patikrink el. paštą (magic link).");
+  }
+}
+
+// GOOGLE
+async function loginWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  if (error) alert(error.message);
+}
+
     // --- Demo data: produktai (kol kas laikom vietoje) ---
     const products = [
       {
@@ -1565,6 +1596,7 @@ try {
   </script>
 </body>
 </html>
+
 
 
 
