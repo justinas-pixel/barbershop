@@ -1610,7 +1610,25 @@ async function loginWithGoogle() {
 
   if (error) alert(error.message);
 }
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === "SIGNED_IN" && session?.user) {
+    const user = session.user;
 
+    // bandome rasti customer pagal email
+    const { data: existing } = await supabase
+      .from("customers")
+      .select("*")
+      .eq("email", user.email)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      await supabase
+        .from("customers")
+        .update({ user_id: user.id })
+        .eq("id", existing[0].id);
+    }
+  }
+});
       
       // datai – min = šiandien
       const dateInput = document.getElementById("dateInput");
@@ -1622,6 +1640,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
