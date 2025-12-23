@@ -1585,6 +1585,21 @@ try {
       updateSelectedServiceUI();
       renderCartIndicator();
       renderSummary();
+      
+async function loginWithEmail(email) {
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("📩 Patikrink el. paštą (prisijungimo nuoroda).");
+  }
+}
 
       // datai – min = šiandien
       const dateInput = document.getElementById("dateInput");
@@ -1596,6 +1611,7 @@ try {
   </script>
 </body>
 </html>
+
 
 
 
