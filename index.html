@@ -1600,7 +1600,18 @@ async function loginWithEmail(email) {
     alert("📩 Patikrink el. paštą (prisijungimo nuoroda).");
   }
 }
+async function loginWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
 
+  if (error) alert(error.message);
+}
+
+      
       // datai – min = šiandien
       const dateInput = document.getElementById("dateInput");
       const today = new Date().toISOString().split("T")[0];
@@ -1611,6 +1622,7 @@ async function loginWithEmail(email) {
   </script>
 </body>
 </html>
+
 
 
 
