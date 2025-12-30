@@ -771,6 +771,16 @@ loginBtn.addEventListener("click", async () => {
       "📩 Laiškas išsiųstas. Patikrink el. paštą ir paspausk nuorodą.";
   }
 });
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log("Auth event:", event);
+
+  if (session?.user) {
+    console.log("Prisijungęs:", session.user.email);
+    // čia vėliau kviestume loadMyBookings()
+  } else {
+    console.log("Atsijungęs");
+  }
+});
 
     // kad galėtum testuoti per DevTools:
 window.supabase = supabase;
@@ -1682,6 +1692,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
