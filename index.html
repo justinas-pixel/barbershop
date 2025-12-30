@@ -537,6 +537,20 @@
       text-align: center;
     }
   </style>
+  <div class="card" id="authCard">
+  <div class="card-title">Prisijungimas</div>
+
+  <div class="field-group">
+    <label for="loginEmail">El. paštas</label>
+    <input type="email" id="loginEmail" placeholder="vardas@email.lt" />
+  </div>
+
+  <button class="btn-primary" id="loginBtn">
+    Prisijungti su magic link
+  </button>
+
+  <div id="authStatus" class="helper"></div>
+</div>
 </head>
 <body>
   <div class="page">
@@ -1640,6 +1654,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
