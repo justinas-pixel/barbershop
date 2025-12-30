@@ -744,6 +744,34 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    const loginBtn = document.getElementById("loginBtn");
+const loginEmail = document.getElementById("loginEmail");
+const authStatus = document.getElementById("authStatus");
+
+loginBtn.addEventListener("click", async () => {
+  const email = loginEmail.value.trim();
+  if (!email) {
+    authStatus.textContent = "Įvesk el. pašto adresą.";
+    return;
+  }
+
+  authStatus.textContent = "Siunčiamas prisijungimo laiškas...";
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  if (error) {
+    authStatus.textContent = "Klaida: " + error.message;
+  } else {
+    authStatus.textContent =
+      "📩 Laiškas išsiųstas. Patikrink el. paštą ir paspausk nuorodą.";
+  }
+});
+
     // kad galėtum testuoti per DevTools:
 window.supabase = supabase;
 
@@ -1654,6 +1682,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
