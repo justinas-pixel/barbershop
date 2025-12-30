@@ -784,8 +784,6 @@ supabase.auth.onAuthStateChange((event, session) => {
 
     // kad galėtum testuoti per DevTools:
 window.supabase = supabase;
-const { data } = await supabase.auth.getUser();
-console.log(data.user);
 
 // MAGIC LINK (email)
 async function loginWithEmail(email) {
@@ -1694,6 +1692,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
