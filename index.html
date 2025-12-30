@@ -743,6 +743,27 @@
   const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+async function handleAuthRedirect() {
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get("code");
+
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) console.error("exchangeCodeForSession error:", error);
+
+    // nuvalom ?code= iš URL (kad nekartotų)
+    url.searchParams.delete("code");
+    window.history.replaceState({}, document.title, url.toString());
+  }
+}
+
+// paleidžiam iškart
+await handleAuthRedirect();
+
+// klausom auth pasikeitimų
+supabase.auth.onAuthStateChange((_event, session) => {
+  console.log("Auth event:", _event, "user:", session?.user || null);
+});
 
     const loginBtn = document.getElementById("loginBtn");
 const loginEmail = document.getElementById("loginEmail");
@@ -1692,6 +1713,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
