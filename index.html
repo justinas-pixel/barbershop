@@ -743,7 +743,32 @@
   const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-async function handleAuthRedirect() {
+// ✅ 1) Apdorojam magic link / oauth callback (jei URL turi ?code=...)
+// Tai būtina, kad sesija būtų įrašyta į localStorage
+(async () => {
+  const url = new URL(window.location.href);
+
+  // naujesnis flow: ?code=...
+  if (url.searchParams.get("code")) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+    if (error) console.error("exchangeCodeForSession error:", error);
+
+    // nuvalom ?code=... iš URL, kad nekliūtų
+    url.searchParams.delete("code");
+    window.history.replaceState({}, document.title, url.toString());
+  }
+
+  // senesnis flow: #access_token=...
+  if (window.location.hash.includes("access_token")) {
+    const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
+    if (error) console.error("getSessionFromUrl error:", error);
+
+    // nuvalom hash
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+  }
+})();
+
+    async function handleAuthRedirect() {
   const url = new URL(window.location.href);
   const code = url.searchParams.get("code");
 
@@ -1713,6 +1738,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
