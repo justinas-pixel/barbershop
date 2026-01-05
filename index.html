@@ -742,11 +742,35 @@
   const SUPABASE_URL = "https://ovayawxvgownebxboqnx.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// ✅ 1) Apdorojam magic link / oauth callback (jei URL turi ?code=...)
-// Tai būtina, kad sesija būtų įrašyta į localStorage
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ✅ Magic link / OAuth callback handler (svarbu!)
 (async () => {
+  console.log("🔎 before exchange:", window.location.href);
+
   const url = new URL(window.location.href);
+  const code = url.searchParams.get("code");
+
+  // Jei Supabase grąžino ?code=...
+  if (code) {
+    console.log("✅ found code:", code.slice(0, 8) + "...");
+    const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+    console.log("exchange result:", { data, error });
+
+    // Išvalom code iš URL (kad nebesikartotų)
+    url.searchParams.delete("code");
+    window.history.replaceState({}, document.title, url.toString());
+  }
+
+  // Patikrinam ar jau turim sesiją
+  const { data: sess } = await supabase.auth.getSession();
+  console.log("✅ session after:", sess.session);
+
+  // Klausom auth eventų (debug)
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log("AUTH EVENT:", event, session);
+  });
+})();
 
   // naujesnis flow: ?code=...
   if (url.searchParams.get("code")) {
@@ -1738,6 +1762,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
