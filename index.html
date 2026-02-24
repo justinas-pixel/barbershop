@@ -790,19 +790,27 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 })();
 
-    async function handleAuthRedirect() {
+(async () => {
   const url = new URL(window.location.href);
   const code = url.searchParams.get("code");
 
   if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) console.error("exchangeCodeForSession error:", error);
+    console.log("Found code:", code);
 
-    // nuvalom ?code= iš URL (kad nekartotų)
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    console.log("Exchange error:", error);
+
     url.searchParams.delete("code");
     window.history.replaceState({}, document.title, url.toString());
   }
-}
+
+  const { data } = await supabase.auth.getSession();
+  console.log("Session after init:", data.session);
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log("Auth event:", event, session);
+  });
+})();
 
 // paleidžiam iškart
 await handleAuthRedirect();
@@ -1760,6 +1768,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
