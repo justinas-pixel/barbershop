@@ -775,16 +775,41 @@ function setAuthStatus(msg) {
       window.history.replaceState({}, document.title, url.toString());
     }
 
-    // Senesnis flow: #access_token=...
-    if (window.location.hash.includes("access_token")) {
-      setAuthStatus("Tvirtinam prisijungimą...");
-      const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
-      console.log("getSessionFromUrl:", { data, error });
-      if (error) setAuthStatus("Klaida: " + error.message);
-      else setAuthStatus("✅ Prisijungta!");
+    async function handleAuthCallback() {
+  try {
+    const url = new URL(window.location.href);
 
-      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    // ✅ v2: OAuth / Magic link su ?code=...
+    const code = url.searchParams.get("code");
+    if (code) {
+      setAuthStatus("Tvirtinam prisijungimą...");
+      const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+      if (error) {
+        console.error("exchangeCodeForSession error:", error);
+        setAuthStatus("Klaida: " + error.message);
+        return;
+      }
+
+      // nuvalom ?code=... iš URL
+      url.searchParams.delete("code");
+      window.history.replaceState({}, document.title, url.toString());
     }
+
+    // ✅ pasiimam sesiją (jei jau yra)
+    const { data: sess } = await supabase.auth.getSession();
+    if (sess.session?.user) {
+      setAuthStatus("✅ Prisijungta!");
+    } else {
+      setAuthStatus("Atsijungęs");
+    }
+  } catch (e) {
+    console.error("Auth callback error:", e);
+    setAuthStatus("Auth callback error (žiūrėk Console).");
+  }
+}
+
+// iškviečiam vieną kartą po createClient()
+handleAuthCallback();
 
     const { data: sess } = await supabase.auth.getSession();
     console.log("SESSION NOW:", sess.session);
@@ -1699,6 +1724,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
