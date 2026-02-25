@@ -748,6 +748,19 @@
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  console.log("CLICK login, email:", email);
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: "https://justinas-pixel.github.io/barbershop/" },
+  });
+
+  console.log("OTP result:", { data, error });
+  alert(error ? ("Klaida: " + error.message) : "Jei viskas ok — patikrink email (ir Spam).");
+});
+
 // ✅ Apdorojam Auth callback (magic link / oauth) kai URL turi ?code=...
 (async () => {
   const url = new URL(window.location.href);
@@ -1772,6 +1785,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
