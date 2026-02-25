@@ -745,6 +745,81 @@
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // =======================
+// AUTH (VIENAS BLOKAS)
+// =======================
+const loginBtn = document.getElementById("loginBtn");
+const loginEmail = document.getElementById("loginEmail");
+const authStatus = document.getElementById("authStatus");
+
+function setAuthStatus(msg) {
+  if (authStatus) authStatus.textContent = msg;
+  console.log("[AUTH]", msg);
+}
+
+// 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
+(async () => {
+  try {
+    const url = new URL(window.location.href);
+
+    // Naujesnis flow: ?code=...
+    const code = url.searchParams.get("code");
+    if (code) {
+      setAuthStatus("Tvirtinam prisijungimą...");
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+      console.log("exchangeCodeForSession:", { data, error });
+      if (error) setAuthStatus("Klaida: " + error.message);
+      else setAuthStatus("✅ Prisijungta!");
+
+      url.searchParams.delete("code");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+
+    // Senesnis flow: #access_token=...
+    if (window.location.hash.includes("access_token")) {
+      setAuthStatus("Tvirtinam prisijungimą...");
+      const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
+      console.log("getSessionFromUrl:", { data, error });
+      if (error) setAuthStatus("Klaida: " + error.message);
+      else setAuthStatus("✅ Prisijungta!");
+
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    }
+
+    const { data: sess } = await supabase.auth.getSession();
+    console.log("SESSION NOW:", sess.session);
+    if (sess.session?.user) setAuthStatus("✅ Prisijungęs: " + sess.session.user.email);
+    else setAuthStatus("Atsijungęs");
+  } catch (e) {
+    console.error("Auth callback error:", e);
+    setAuthStatus("Auth callback error (žiūrėk Console).");
+  }
+})();
+
+// 2) Prisijungimo mygtukas (siunčia magic link)
+loginBtn?.addEventListener("click", async () => {
+  const email = loginEmail?.value?.trim();
+  if (!email) return setAuthStatus("Įvesk el. paštą.");
+
+  setAuthStatus("Siunčiamas prisijungimo laiškas...");
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  console.log("signInWithOtp:", { data, error });
+  if (error) setAuthStatus("Klaida: " + error.message);
+  else setAuthStatus("📩 Patikrink el. paštą (ir Spam) – ir paspausk nuorodą laiške.");
+});
+
+// 3) Eventai (debug)
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log("AUTH EVENT:", event, session?.user ?? null);
+});
+    
     // --- Demo data: produktai (kol kas laikom vietoje) ---
     const products = [
       {
@@ -1624,6 +1699,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
