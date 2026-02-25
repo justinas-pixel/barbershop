@@ -747,6 +747,71 @@
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // =======================
+// AUTH BLOKAS (VIENINTELIS)
+// =======================
+
+const loginBtn = document.getElementById("loginBtn");
+const loginEmail = document.getElementById("loginEmail");
+const authStatus = document.getElementById("authStatus");
+
+// 1) Apdorojam magic link grįžimą
+(async () => {
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get("code");
+
+  if (code) {
+    authStatus.textContent = "Tvirtinam prisijungimą...";
+
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      console.error("exchange error:", error);
+      authStatus.textContent = "Klaida: " + error.message;
+    } else {
+      authStatus.textContent = "✅ Prisijungta!";
+    }
+
+    url.searchParams.delete("code");
+    window.history.replaceState({}, document.title, url.toString());
+  }
+
+  const { data: sess } = await supabase.auth.getSession();
+  console.log("Session:", sess.session);
+})();
+
+// 2) Login mygtukas
+loginBtn.addEventListener("click", async () => {
+  const email = loginEmail.value.trim();
+
+  if (!email) {
+    authStatus.textContent = "Įvesk el. paštą.";
+    return;
+  }
+
+  authStatus.textContent = "Siunčiamas laiškas...";
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  console.log("OTP result:", { data, error });
+
+  if (error) {
+    authStatus.textContent = "Klaida: " + error.message;
+  } else {
+    authStatus.textContent = "📩 Patikrink el. paštą (ir Spam).";
+  }
+});
+
+// 3) Auth event listener
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log("AUTH EVENT:", event, session?.user ?? null);
+});
+    
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const email = document.getElementById("loginEmail").value.trim();
   console.log("CLICK login, email:", email);
@@ -1763,6 +1828,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
