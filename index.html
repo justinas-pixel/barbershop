@@ -540,14 +540,19 @@
  
 </head>
 <body>
-     <div class="card" id="authCard">
-  <div class="card-title">Prisijungimas</div>
+    <div class="page">
+  <div class="card" id="authCard">
+    <div class="card-title">Prisijungimas</div>
 
-  <div class="field-group">
-    <label for="loginEmail">El. paštas</label>
-    <input type="email" id="loginEmail" placeholder="vardas@email.lt" />
+    <div class="field-group">
+      <label for="loginEmail">El. paštas</label>
+      <input type="email" id="loginEmail" placeholder="vardas@email.lt" />
+    </div>
+
+    <button class="btn-primary" id="loginBtn">Prisijungti</button>
+    <div id="authStatus" class="helper"></div>
   </div>
-  <div class="page">
+</div>
   
     <header>
       <div class="logo">
@@ -1821,6 +1826,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
