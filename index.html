@@ -810,29 +810,6 @@ if (code) {
   }
 })();
 
-(async () => {
-  const url = new URL(window.location.href);
-  const code = url.searchParams.get("code");
-
-  if (code) {
-    console.log("Found code:", code);
-
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    console.log("Exchange error:", error);
-
-    url.searchParams.delete("code");
-    window.history.replaceState({}, document.title, url.toString());
-  }
-
-  const { data } = await supabase.auth.getSession();
-  console.log("Session after init:", data.session);
-
-  supabase.auth.onAuthStateChange((event, session) => {
-    console.log("Auth event:", event, session);
-  });
-})();
-
-
 // klausom auth pasikeitimų
 supabase.auth.onAuthStateChange((_event, session) => {
   console.log("Auth event:", _event, "user:", session?.user || null);
@@ -1786,6 +1763,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
