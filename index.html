@@ -786,15 +786,19 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 })();
 
 
-  // naujesnis flow: ?code=...
-  if (url.searchParams.get("code")) {
-    const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
-    if (error) console.error("exchangeCodeForSession error:", error);
+  const url = new URL(window.location.href);
+const code = url.searchParams.get("code");
 
-    // nuvalom ?code=... iš URL, kad nekliūtų
-    url.searchParams.delete("code");
-    window.history.replaceState({}, document.title, url.toString());
+if (code) {
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    console.error("exchangeCodeForSession error:", error);
   }
+
+  url.searchParams.delete("code");
+  window.history.replaceState({}, document.title, url.toString());
+}
 
   // senesnis flow: #access_token=...
   if (window.location.hash.includes("access_token")) {
@@ -1782,6 +1786,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
