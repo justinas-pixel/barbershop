@@ -1757,41 +1757,99 @@ const email = document.getElementById("emailInput").value.trim() || null;
     }
 
    
-    // 4. Sukuriam rezervaciją Supabase (ČIA VIENINTELIS 'booking')
-    const { data: booking, error: bookingError } = await supabase
-      .from("bookings")
+    // 4) Susitvarkom customer (pagal auth, jei prisijungęs)
+const { data: sess } = await supabase.auth.getSession();
+const user = sess?.session?.user;
+
+let customer = null;
+
+if (user) {
+  // paimam customer pagal user_id
+  const { data: c1, error: e1 } = await supabase
+    .from("customers")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (e1) throw e1;
+
+  if (c1) {
+    customer = c1;
+
+    // atnaujinam kontaktus (jei pasikeitė)
+    const { error: uErr } = await supabase
+      .from("customers")
+      .update({
+        name: name || customer.name,
+        phone: phone || customer.phone,
+        email: user.email || email || customer.email,
+      })
+      .eq("id", customer.id);
+
+    if (uErr) throw uErr;
+  } else {
+    // jei nėra – sukuriam
+    const { data: c2, error: e2 } = await supabase
+      .from("customers")
       .insert({
-        customer_id: customer.id,
-        barber_id: barber.id,
-        service_id: service.id,
-        start_time: startDateTime.toISOString(),
-        end_time: endDateTime.toISOString(),
-        status: "pending",
-        note
+        user_id: user.id,
+        name,
+        phone,
+        email: user.email || email,
       })
       .select()
       .single();
 
-    if (bookingError) {
-      console.error(bookingError);
-      status.textContent = "Nepavyko išsaugoti rezervacijos.";
-      status.classList.add("error");
-      return;
-    }
+    if (e2) throw e2;
+    customer = c2;
+  }
+} else {
+  // jei neprisijungęs – lieka tavo senas flow
+  customer = await findOrCreateCustomer(name, phone, email);
+}
 
-    // 5. Atnaujinam vietinę suvestinę
-    lastBooking = {
-      id: booking.id,
-      serviceName: service.name,
-      barberName: barber.name,
-      date,
-      time,
-      name,
-      phone,
-      note
-    };
-    updateBookingStorage();
-    renderSummary();
+// jei vis tiek kažkaip nėra customer -> stabdom
+if (!customer?.id) {
+  status.textContent = "Nepavyko nustatyti kliento profilio.";
+  status.classList.add("error");
+  return;
+}
+
+// 5) Sukuriam rezervaciją (ČIA VIENINTELIS bookings.insert)
+const { data: booking, error: bookingError } = await supabase
+  .from("bookings")
+  .insert({
+    customer_id: customer.id,
+    barber_id: barber.id,
+    service_id: service.id,
+    start_time: startDateTime.toISOString(),
+    end_time: endDateTime.toISOString(),
+    status: "pending",
+    note,
+  })
+  .select()
+  .single();
+
+if (bookingError) {
+  console.error(bookingError);
+  status.textContent = "Nepavyko išsaugoti rezervacijos.";
+  status.classList.add("error");
+  return;
+}
+
+// 6) Atnaujinam vietinę suvestinę
+lastBooking = {
+  id: booking.id,
+  serviceName: service.name,
+  barberName: barber.name,
+  date,
+  time,
+  name,
+  phone,
+  note,
+};
+updateBookingStorage();
+renderSummary();
 
 // 6. Iškviečiam edge funkciją (email patvirtinimas) – jei nepavyksta, rezervacija vistiek lieka
 try {
@@ -1908,6 +1966,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
