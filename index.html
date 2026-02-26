@@ -1020,7 +1020,16 @@ loginBtn?.addEventListener("click", async () => {
 
 // 3) Eventai (debug)
 supabase.auth.onAuthStateChange((event, session) => {
-  console.log("AUTH EVENT:", event, session?.user ?? null);
+  console.log("AUTH EVENT:", event, session?.user?.email || null);
+
+  if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+    if (session?.user) loadMyBookings();
+  }
+
+  if (event === "SIGNED_OUT") {
+    myBookingsList.innerHTML = "";
+    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
+  }
 });
     
     // --- Demo data: produktai (kol kas laikom vietoje) ---
@@ -1899,6 +1908,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
