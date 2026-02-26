@@ -798,6 +798,140 @@ const CANCEL_MIN_HOURS = 2;
 function canCancel(iso) {
   return new Date(iso).getTime() > Date.now() + CANCEL_MIN_HOURS * 60 * 60 * 1000;
 }
+
+    async function loadMyBookings() {
+  myBookingsStatus.textContent = "Kraunam rezervacijas...";
+  myBookingsList.innerHTML = "";
+
+  const { data: sess } = await supabase.auth.getSession();
+  const user = sess?.session?.user;
+
+  if (!user) {
+    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
+    return;
+  }
+
+  // Susirandam customer pagal user_id
+  const { data: cust, error: custErr } = await supabase
+    .from("customers")
+    .select("id, name, phone, email")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (custErr) {
+    console.error(custErr);
+    myBookingsStatus.textContent = "Nepavyko nuskaityti profilio (customers).";
+    return;
+  }
+
+  if (!cust?.id) {
+    myBookingsStatus.textContent = "Profilis dar nesukurtas. Pabandyk prisijungti iš naujo.";
+    return;
+  }
+
+  // UŽKLAUSA: mano bookings + barber/service pavadinimai
+  const { data: bookings, error } = await supabase
+    .from("bookings")
+    .select(`
+      id,
+      start_time,
+      end_time,
+      status,
+      note,
+      barbers ( name ),
+      services ( name, duration_minutes, price_eur )
+    `)
+    .eq("customer_id", cust.id)
+    .order("start_time", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    myBookingsStatus.textContent = "Nepavyko nuskaityti rezervacijų (bookings).";
+    return;
+  }
+
+  if (!bookings || bookings.length === 0) {
+    myBookingsStatus.textContent = "Rezervacijų dar nėra.";
+    return;
+  }
+
+  myBookingsStatus.textContent = `Rasta rezervacijų: ${bookings.length}`;
+  renderMyBookings(bookings);
+}
+
+    function renderMyBookings(bookings) {
+  myBookingsList.innerHTML = "";
+
+  bookings.forEach(b => {
+    const item = document.createElement("div");
+    item.className = "list-item";
+
+    const main = document.createElement("div");
+    main.className = "list-item-main";
+
+    const title = document.createElement("div");
+    title.className = "list-item-title";
+    title.textContent = `${b.services?.name || "Paslauga"} • ${b.barbers?.name || "Meistras"}`;
+
+    const meta = document.createElement("div");
+    meta.className = "list-item-meta";
+    meta.textContent = `${fmtDateTimeLT(b.start_time)} — statusas: ${b.status}`;
+
+    const note = document.createElement("div");
+    note.className = "list-item-meta";
+    note.textContent = b.note ? `Komentaras: ${b.note}` : "";
+
+    main.appendChild(title);
+    main.appendChild(meta);
+    if (b.note) main.appendChild(note);
+
+    const right = document.createElement("div");
+    right.style.display = "flex";
+    right.style.flexDirection = "column";
+    right.style.alignItems = "flex-end";
+    right.style.gap = "6px";
+
+    // Atšaukti rodome tik jei future ir statusas leidžia
+    const canShowCancel =
+      (b.status === "pending" || b.status === "confirmed") &&
+      isFuture(b.start_time) &&
+      canCancel(b.start_time); // jei nenori 2h taisyklės front’e -> pakeisk į isFuture(b.start_time)
+
+    if (canShowCancel) {
+      const btn = document.createElement("button");
+      btn.className = "btn-outline";
+      btn.textContent = "Atšaukti";
+      btn.addEventListener("click", async () => {
+        const ok = confirm("Ar tikrai nori atšaukti šią rezervaciją?");
+        if (!ok) return;
+        await cancelBooking(b.id);
+      });
+      right.appendChild(btn);
+    }
+
+    item.appendChild(main);
+    item.appendChild(right);
+    myBookingsList.appendChild(item);
+  });
+}
+
+async function cancelBooking(bookingId) {
+  myBookingsStatus.textContent = "Atšaukiam rezervaciją...";
+
+  const { error } = await supabase
+    .from("bookings")
+    .update({ status: "cancelled" })
+    .eq("id", bookingId);
+
+  if (error) {
+    console.error(error);
+    myBookingsStatus.textContent = "Nepavyko atšaukti (gal per vėlu, arba RLS blokuoja).";
+    return;
+  }
+
+  myBookingsStatus.textContent = "✅ Rezervacija atšaukta.";
+  await loadMyBookings();
+}
     
 // 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
 (async () => {
@@ -1766,6 +1900,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
