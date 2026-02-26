@@ -1872,9 +1872,6 @@ async function loginWithGoogle() {
 
   if (error) alert(error.message);
 }
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === "SIGNED_IN" && session?.user) {
-    const user = session.user;
 
     // bandome rasti customer pagal email
     const { data: existing } = await supabase
@@ -1902,6 +1899,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
