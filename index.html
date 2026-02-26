@@ -760,7 +760,7 @@
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // =======================
+// =======================
 // AUTH (VIENAS BLOKAS)
 // =======================
 const loginBtn = document.getElementById("loginBtn");
@@ -772,189 +772,12 @@ function setAuthStatus(msg) {
   console.log("[AUTH]", msg);
 }
 
-const myBookingsPane = document.getElementById("myBookingsPane");
-const myBookingsList = document.getElementById("myBookingsList");
-const myBookingsStatus = document.getElementById("myBookingsStatus");
-const refreshMyBookingsBtn = document.getElementById("refreshMyBookings");
-
-    function fmtDateTimeLT(iso) {
-  const d = new Date(iso);
-  const date = d.toLocaleDateString("lt-LT", { year: "numeric", month: "2-digit", day: "2-digit" });
-  const time = d.toLocaleTimeString("lt-LT", { hour: "2-digit", minute: "2-digit" });
-  return `${date} ${time}`;
-}
-
-function isFuture(iso) {
-  return new Date(iso).getTime() > Date.now();
-}
-
-// jei naudoji 2h taisyklę front’e (nebūtina)
-const CANCEL_MIN_HOURS = 2;
-function canCancel(iso) {
-  return new Date(iso).getTime() > Date.now() + CANCEL_MIN_HOURS * 60 * 60 * 1000;
-}
-
-    async function loadMyBookings() {
-  myBookingsStatus.textContent = "Kraunam rezervacijas...";
-  myBookingsList.innerHTML = "";
-
-  const { data: sess } = await supabase.auth.getSession();
-  const user = sess?.session?.user;
-
-  if (!user) {
-    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
-    return;
-  }
-
-  // Susirandam customer pagal user_id
-  const { data: cust, error: custErr } = await supabase
-    .from("customers")
-    .select("id, name, phone, email")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (custErr) {
-    console.error(custErr);
-    myBookingsStatus.textContent = "Nepavyko nuskaityti profilio (customers).";
-    return;
-  }
-
-  if (!cust?.id) {
-    myBookingsStatus.textContent = "Profilis dar nesukurtas. Pabandyk prisijungti iš naujo.";
-    return;
-  }
-
-  // UŽKLAUSA: mano bookings + barber/service pavadinimai
-  const { data: bookings, error } = await supabase
-    .from("bookings")
-    .select(`
-      id,
-      start_time,
-      end_time,
-      status,
-      note,
-      barbers ( name ),
-      services ( name, duration_minutes, price_eur )
-    `)
-    .eq("customer_id", cust.id)
-    .order("start_time", { ascending: true });
-
-  if (error) {
-    console.error(error);
-    myBookingsStatus.textContent = "Nepavyko nuskaityti rezervacijų (bookings).";
-    return;
-  }
-
-  if (!bookings || bookings.length === 0) {
-    myBookingsStatus.textContent = "Rezervacijų dar nėra.";
-    return;
-  }
-
-  myBookingsStatus.textContent = `Rasta rezervacijų: ${bookings.length}`;
-  renderMyBookings(bookings);
-}
-
-    function renderMyBookings(bookings) {
-  myBookingsList.innerHTML = "";
-
-  bookings.forEach(b => {
-    const item = document.createElement("div");
-    item.className = "list-item";
-
-    const main = document.createElement("div");
-    main.className = "list-item-main";
-
-    const title = document.createElement("div");
-    title.className = "list-item-title";
-    title.textContent = `${b.services?.name || "Paslauga"} • ${b.barbers?.name || "Meistras"}`;
-
-    const meta = document.createElement("div");
-    meta.className = "list-item-meta";
-    meta.textContent = `${fmtDateTimeLT(b.start_time)} — statusas: ${b.status}`;
-
-    const note = document.createElement("div");
-    note.className = "list-item-meta";
-    note.textContent = b.note ? `Komentaras: ${b.note}` : "";
-
-    main.appendChild(title);
-    main.appendChild(meta);
-    if (b.note) main.appendChild(note);
-
-    const right = document.createElement("div");
-    right.style.display = "flex";
-    right.style.flexDirection = "column";
-    right.style.alignItems = "flex-end";
-    right.style.gap = "6px";
-
-    // Atšaukti rodome tik jei future ir statusas leidžia
-    const canShowCancel =
-      (b.status === "pending" || b.status === "confirmed") &&
-      isFuture(b.start_time) &&
-      canCancel(b.start_time); // jei nenori 2h taisyklės front’e -> pakeisk į isFuture(b.start_time)
-
-    if (canShowCancel) {
-      const btn = document.createElement("button");
-      btn.className = "btn-outline";
-      btn.textContent = "Atšaukti";
-      btn.addEventListener("click", async () => {
-        const ok = confirm("Ar tikrai nori atšaukti šią rezervaciją?");
-        if (!ok) return;
-        await cancelBooking(b.id);
-      });
-      right.appendChild(btn);
-    }
-
-    item.appendChild(main);
-    item.appendChild(right);
-    myBookingsList.appendChild(item);
-  });
-}
-
-async function cancelBooking(bookingId) {
-  myBookingsStatus.textContent = "Atšaukiam rezervaciją...";
-
-  const { error } = await supabase
-    .from("bookings")
-    .update({ status: "cancelled" })
-    .eq("id", bookingId);
-
-  if (error) {
-    console.error(error);
-    myBookingsStatus.textContent = "Nepavyko atšaukti (gal per vėlu, arba RLS blokuoja).";
-    return;
-  }
-
-  myBookingsStatus.textContent = "✅ Rezervacija atšaukta.";
-  await loadMyBookings();
-}
-
-    refreshMyBookingsBtn.addEventListener("click", loadMyBookings);
-    
-// 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
-(async () => {
+async function handleAuthCallback() {
   try {
     const url = new URL(window.location.href);
 
-    // Naujesnis flow: ?code=...
-    const code = url.searchParams.get("code");
-    if (code) {
-      setAuthStatus("Tvirtinam prisijungimą...");
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-      console.log("exchangeCodeForSession:", { data, error });
-      if (error) setAuthStatus("Klaida: " + error.message);
-      else setAuthStatus("✅ Prisijungta!");
-
-      url.searchParams.delete("code");
-      window.history.replaceState({}, document.title, url.toString());
-    }
-
-    async function handleAuthCallback() {
-  try {
-    const url = new URL(window.location.href);
-
-    // ✅ v2: OAuth / Magic link su ?code=...
-    const code = url.searchParams.get("code");
-    if (code) {
+    // ✅ Naujas flow: ?code=...
+    if (url.searchParams.get("code")) {
       setAuthStatus("Tvirtinam prisijungimą...");
       const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
       if (error) {
@@ -963,15 +786,15 @@ async function cancelBooking(bookingId) {
         return;
       }
 
-      // nuvalom ?code=... iš URL
+      // nuvalom ?code=... kad netrukdytų
       url.searchParams.delete("code");
       window.history.replaceState({}, document.title, url.toString());
     }
 
-    // ✅ pasiimam sesiją (jei jau yra)
+    // ✅ parodom statusą pagal session
     const { data: sess } = await supabase.auth.getSession();
     if (sess.session?.user) {
-      setAuthStatus("✅ Prisijungta!");
+      setAuthStatus("✅ Prisijungęs: " + sess.session.user.email);
     } else {
       setAuthStatus("Atsijungęs");
     }
@@ -981,18 +804,45 @@ async function cancelBooking(bookingId) {
   }
 }
 
-// iškviečiam vieną kartą po createClient()
+// Paleidžiam vieną kartą
 handleAuthCallback();
 
-    const { data: sess } = await supabase.auth.getSession();
-    console.log("SESSION NOW:", sess.session);
-    if (sess.session?.user) setAuthStatus("✅ Prisijungęs: " + sess.session.user.email);
-    else setAuthStatus("Atsijungęs");
-  } catch (e) {
-    console.error("Auth callback error:", e);
-    setAuthStatus("Auth callback error (žiūrėk Console).");
+// Magic link siuntimas
+loginBtn?.addEventListener("click", async () => {
+  const email = loginEmail?.value?.trim();
+  if (!email) return setAuthStatus("Įvesk el. paštą.");
+
+  setAuthStatus("Siunčiamas prisijungimo laiškas...");
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
+    },
+  });
+
+  console.log("signInWithOtp:", { data, error });
+  if (error) setAuthStatus("Klaida: " + error.message);
+  else setAuthStatus("📩 Patikrink el. paštą (ir Spam) – paspausk nuorodą laiške.");
+});
+
+// Debug eventai + iš čia galim trigerinti "mano rezervacijos"
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log("AUTH EVENT:", event, session?.user?.email || null);
+
+  if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+    if (session?.user) {
+      // optional: loadMyBookings() kviesim kai perjungi į tab’ą arba čia
+      loadMyBookings();
+    }
   }
-})();
+
+  if (event === "SIGNED_OUT") {
+    myBookingsList.innerHTML = "";
+    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
+    setAuthStatus("Atsijungęs");
+  }
+});
 
 // 2) Prisijungimo mygtukas (siunčia magic link)
 loginBtn?.addEventListener("click", async () => {
@@ -1961,6 +1811,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
