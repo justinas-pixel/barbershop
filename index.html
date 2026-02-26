@@ -1759,14 +1759,6 @@ try {
       renderCartIndicator();
       renderSummary();
       
-async function loginWithEmail(email) {
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
-    },
-  });
-
   if (error) {
     alert(error.message);
   } else {
@@ -1810,6 +1802,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
