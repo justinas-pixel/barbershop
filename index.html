@@ -932,6 +932,8 @@ async function cancelBooking(bookingId) {
   myBookingsStatus.textContent = "✅ Rezervacija atšaukta.";
   await loadMyBookings();
 }
+
+    refreshMyBookingsBtn.addEventListener("click", loadMyBookings);
     
 // 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
 (async () => {
@@ -1900,6 +1902,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
