@@ -1590,18 +1590,7 @@ const email = document.getElementById("emailInput").value.trim() || null;
       return;
     }
 
-    // 3. Surandam arba sukuriam klientą pagal telefoną
-    let customer;
-    try {
-      customer = await findOrCreateCustomer(name, phone, email);
-    } catch (err) {
-      console.error(err);
-      status.textContent = "Nepavyko išsaugoti / patikrinti kliento.";
-      status.classList.add("error");
-      return;
-    }
-
-   
+    
     // 4) Susitvarkom customer (pagal auth, jei prisijungęs)
 const { data: sess } = await supabase.auth.getSession();
 const user = sess?.session?.user;
@@ -1811,6 +1800,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
