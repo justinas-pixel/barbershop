@@ -781,6 +781,23 @@ const myBookingsPane = document.getElementById("myBookingsPane");
 const myBookingsList = document.getElementById("myBookingsList");
 const myBookingsStatus = document.getElementById("myBookingsStatus");
 const refreshMyBookingsBtn = document.getElementById("refreshMyBookings");
+
+    function fmtDateTimeLT(iso) {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("lt-LT", { year: "numeric", month: "2-digit", day: "2-digit" });
+  const time = d.toLocaleTimeString("lt-LT", { hour: "2-digit", minute: "2-digit" });
+  return `${date} ${time}`;
+}
+
+function isFuture(iso) {
+  return new Date(iso).getTime() > Date.now();
+}
+
+// jei naudoji 2h taisyklę front’e (nebūtina)
+const CANCEL_MIN_HOURS = 2;
+function canCancel(iso) {
+  return new Date(iso).getTime() > Date.now() + CANCEL_MIN_HOURS * 60 * 60 * 1000;
+}
     
 // 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
 (async () => {
@@ -1749,6 +1766,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
