@@ -777,6 +777,11 @@ function setAuthStatus(msg) {
   console.log("[AUTH]", msg);
 }
 
+const myBookingsPane = document.getElementById("myBookingsPane");
+const myBookingsList = document.getElementById("myBookingsList");
+const myBookingsStatus = document.getElementById("myBookingsStatus");
+const refreshMyBookingsBtn = document.getElementById("refreshMyBookings");
+    
 // 1) Apdorojam grįžimą iš magic link / OAuth (supportinam abu: ?code=... ir #access_token=...)
 (async () => {
   try {
@@ -1744,6 +1749,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
