@@ -1590,15 +1590,13 @@ const email = document.getElementById("emailInput").value.trim() || null;
       return;
     }
 
-    
-    // 4) Susitvarkom customer (pagal auth, jei prisijungęs)
+ // 3) Susitvarkom customer (pagal auth, jei prisijungęs)
 const { data: sess } = await supabase.auth.getSession();
 const user = sess?.session?.user;
 
 let customer = null;
 
 if (user) {
-  // paimam customer pagal user_id
   const { data: c1, error: e1 } = await supabase
     .from("customers")
     .select("*")
@@ -1610,7 +1608,6 @@ if (user) {
   if (c1) {
     customer = c1;
 
-    // atnaujinam kontaktus (jei pasikeitė)
     const { error: uErr } = await supabase
       .from("customers")
       .update({
@@ -1622,7 +1619,6 @@ if (user) {
 
     if (uErr) throw uErr;
   } else {
-    // jei nėra – sukuriam
     const { data: c2, error: e2 } = await supabase
       .from("customers")
       .insert({
@@ -1638,16 +1634,30 @@ if (user) {
     customer = c2;
   }
 } else {
-  // jei neprisijungęs – lieka tavo senas flow
+  // neprisijungęs – senas flow pagal phone/email
   customer = await findOrCreateCustomer(name, phone, email);
 }
 
-// jei vis tiek kažkaip nėra customer -> stabdom
 if (!customer?.id) {
   status.textContent = "Nepavyko nustatyti kliento profilio.";
   status.classList.add("error");
   return;
 }
+
+// 4) VIENINTELIS bookings.insert
+const { data: booking, error: bookingError } = await supabase
+  .from("bookings")
+  .insert({
+    customer_id: customer.id,
+    barber_id: barber.id,
+    service_id: service.id,
+    start_time: startDateTime.toISOString(),
+    end_time: endDateTime.toISOString(),
+    status: "pending",
+    note,
+  })
+  .select()
+  .single();
 
 // 5) Sukuriam rezervaciją (ČIA VIENINTELIS bookings.insert)
 const { data: booking, error: bookingError } = await supabase
@@ -1800,6 +1810,7 @@ async function loginWithGoogle() {
   </script>
 </body>
 </html>
+
 
 
 
