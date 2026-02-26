@@ -16,60 +16,42 @@
       --radius: 16px;
       --shadow: 0 10px 30px rgba(0,0,0,0.55);
     }
-.time-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.slot-btn {
-  border-radius: 999px;
-  padding: 4px 9px;
-  font-size: 11px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.4);
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.slot-btn:hover {
-  border-color: var(--accent);
-}
-
-.slot-btn.busy {
-  opacity: 0.4;
-  cursor: not-allowed;
-  text-decoration: line-through;
-}
-
-.slot-btn.selected {
-  background: var(--accent);
-  color: #111;
-  border-color: var(--accent-dark);
-  font-weight: 600;
-}
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
     }
-
+    .slot-btn {
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .slot-btn:hover { border-color: var(--accent); }
+    .slot-btn.busy {
+      opacity: 0.4;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+    .slot-btn.selected {
+      background: var(--accent);
+      color: #111;
+      border-color: var(--accent-dark);
+      font-weight: 600;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #202332 0, #050608 55%);
       color: var(--text);
       min-height: 100vh;
     }
-
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
-
+    .page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
     header {
       display: flex;
       justify-content: space-between;
@@ -77,13 +59,7 @@
       gap: 16px;
       padding: 10px 16px 24px;
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    .logo { display: flex; align-items: center; gap: 10px; }
     .logo-mark {
       width: 36px;
       height: 36px;
@@ -95,31 +71,15 @@
       font-weight: 700;
       font-size: 18px;
     }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
+    .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
     .logo-text span:first-child {
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       font-size: 14px;
     }
-
-    .logo-text span:last-child {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .logo-text span:last-child { font-size: 12px; color: var(--muted); }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
     nav button {
       border-radius: 999px;
       border: 1px solid #26293a;
@@ -130,19 +90,13 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-
-    nav button:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
-
+    nav button:hover { border-color: var(--accent); color: var(--text); }
     nav button.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-dark));
       border-color: transparent;
       color: #111;
       font-weight: 600;
     }
-
     .cart-button {
       display: flex;
       align-items: center;
@@ -156,7 +110,6 @@
       font-size: 13px;
       box-shadow: var(--shadow);
     }
-
     .cart-badge {
       min-width: 18px;
       height: 18px;
@@ -169,19 +122,12 @@
       font-size: 11px;
       font-weight: 700;
     }
-
     main {
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
       gap: 20px;
     }
-
-    @media (max-width: 860px) {
-      main {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
+    @media (max-width: 860px) { main { grid-template-columns: minmax(0, 1fr); } }
     .card {
       background: radial-gradient(circle at top, #23263a 0, #101218 45%, #050608 100%);
       border-radius: var(--radius);
@@ -189,7 +135,6 @@
       box-shadow: var(--shadow);
       border: 1px solid rgba(255,255,255,0.03);
     }
-
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -197,17 +142,8 @@
       margin-bottom: 8px;
       gap: 10px;
     }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .card-subtitle {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
+    .card-title { font-size: 18px; font-weight: 600; }
+    .card-subtitle { font-size: 13px; color: var(--muted); }
     .pill {
       display: inline-flex;
       align-items: center;
@@ -220,7 +156,6 @@
       text-transform: uppercase;
       letter-spacing: 0.09em;
     }
-
     .list {
       margin-top: 10px;
       display: flex;
@@ -230,7 +165,6 @@
       overflow-y: auto;
       padding-right: 4px;
     }
-
     .list-item {
       display: flex;
       gap: 12px;
@@ -240,30 +174,10 @@
       border: 1px solid rgba(255,255,255,0.03);
       align-items: center;
     }
-
-    .list-item-main {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .list-item-title {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .list-item-meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .list-item-tags {
-      margin-top: 4px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
+    .list-item-main { flex: 1; min-width: 0; }
+    .list-item-title { font-size: 14px; font-weight: 500; }
+    .list-item-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .list-item-tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
     .tag {
       font-size: 10px;
       text-transform: uppercase;
@@ -273,14 +187,8 @@
       background: rgba(255,255,255,0.04);
       color: var(--muted);
     }
-
-    .price {
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .btn-primary,
-    .btn-outline {
+    .price { font-weight: 600; font-size: 14px; }
+    .btn-primary, .btn-outline {
       border-radius: 999px;
       padding: 7px 12px;
       font-size: 12px;
@@ -289,46 +197,21 @@
       white-space: nowrap;
       transition: all 0.18s ease;
     }
-
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-dark));
       color: #111;
       font-weight: 600;
     }
-
-    .btn-primary:hover {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
-    }
-
+    .btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
     .btn-outline {
       background: transparent;
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--text);
     }
-
-    .btn-outline:hover {
-      border-color: var(--accent);
-    }
-
-    .right-column {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
+    .btn-outline:hover { border-color: var(--accent); }
+    .right-column { display: flex; flex-direction: column; gap: 16px; }
+    .field-group { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+    label { font-size: 13px; color: var(--muted); }
     input, select, textarea {
       background: #080812;
       border-radius: 999px;
@@ -338,32 +221,11 @@
       color: var(--text);
       outline: none;
     }
-
-    textarea {
-      border-radius: 12px;
-      resize: vertical;
-      min-height: 50px;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-    }
-
-    .field-inline {
-      display: flex;
-      gap: 8px;
-    }
-
-    .field-inline > div {
-      flex: 1;
-    }
-
-    .helper {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
+    textarea { border-radius: 12px; resize: vertical; min-height: 50px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    .field-inline { display: flex; gap: 8px; }
+    .field-inline > div { flex: 1; }
+    .helper { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .badge-service {
       font-size: 11px;
       padding: 3px 9px;
@@ -374,14 +236,7 @@
       align-items: center;
       gap: 5px;
     }
-
-    .section-toggle {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
+    .section-toggle { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
     .section-toggle button {
       flex: 1;
       min-width: 110px;
@@ -393,19 +248,13 @@
       color: var(--muted);
       cursor: pointer;
     }
-
     .section-toggle button.active {
       background: rgba(245,176,65,0.1);
       border-color: var(--accent);
       color: var(--accent);
       font-weight: 500;
     }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* Cart modal */
+    .hidden { display: none !important; }
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -415,7 +264,6 @@
       justify-content: center;
       z-index: 20;
     }
-
     .modal {
       background: #05060b;
       border-radius: 18px;
@@ -430,19 +278,8 @@
       flex-direction: column;
       gap: 10px;
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .modal-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
+    .modal-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .modal-title { font-size: 16px; font-weight: 600; }
     .modal-body {
       margin-top: 6px;
       flex: 1;
@@ -452,7 +289,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -463,27 +299,10 @@
       border-radius: 10px;
       background: rgba(255,255,255,0.02);
     }
-
-    .cart-item-main {
-      flex: 1;
-    }
-
-    .cart-item-title {
-      font-weight: 500;
-    }
-
-    .cart-item-meta {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .qty {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-    }
-
+    .cart-item-main { flex: 1; }
+    .cart-item-title { font-weight: 500; }
+    .cart-item-meta { font-size: 12px; color: var(--muted); }
+    .qty { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
     .qty button {
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -497,7 +316,6 @@
       cursor: pointer;
       font-size: 12px;
     }
-
     .cart-footer {
       border-top: 1px dashed rgba(255,255,255,0.16);
       padding-top: 8px;
@@ -507,53 +325,26 @@
       gap: 10px;
       font-size: 13px;
     }
-
-    .total {
-      font-weight: 600;
-    }
-
-    .label-small {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .status {
-      margin-top: 6px;
-      font-size: 12px;
-    }
-
-    .status.success {
-      color: #2ecc71;
-    }
-
-    .status.error {
-      color: var(--danger);
-    }
-
-    footer {
-      margin-top: 22px;
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-    }
+    .total { font-weight: 600; }
+    .label-small { font-size: 11px; color: var(--muted); }
+    .status { margin-top: 6px; font-size: 12px; }
+    .status.success { color: #2ecc71; }
+    .status.error { color: var(--danger); }
+    footer { margin-top: 22px; font-size: 11px; color: var(--muted); text-align: center; }
   </style>
- 
 </head>
 <body>
-    <div class="page">
-  <div class="card" id="authCard">
-    <div class="card-title">Prisijungimas</div>
-
-    <div class="field-group">
-      <label for="loginEmail">El. paštas</label>
-      <input type="email" id="loginEmail" placeholder="vardas@email.lt" />
+  <div class="page">
+    <div class="card" id="authCard">
+      <div class="card-title">Prisijungimas</div>
+      <div class="field-group">
+        <label for="loginEmail">El. paštas</label>
+        <input type="email" id="loginEmail" placeholder="vardas@email.lt" />
+      </div>
+      <button class="btn-primary" id="loginBtn">Prisijungti</button>
+      <div id="authStatus" class="helper"></div>
     </div>
 
-    <button class="btn-primary" id="loginBtn">Prisijungti</button>
-    <div id="authStatus" class="helper"></div>
-  </div>
-</div>
-  
     <header>
       <div class="logo">
         <div class="logo-mark">B</div>
@@ -574,7 +365,6 @@
     </header>
 
     <main>
-      <!-- Left column: services/products -->
       <section class="card">
         <div class="card-header">
           <div>
@@ -587,51 +377,43 @@
         </div>
 
         <div id="servicesSection">
-          <div class="list" id="servicesList"><!-- JS --></div>
+          <div class="list" id="servicesList"></div>
         </div>
 
         <div id="productsSection" class="hidden">
-          <div class="list" id="productsList"><!-- JS --></div>
+          <div class="list" id="productsList"></div>
         </div>
       </section>
 
-      <!-- Right column: booking & summary -->
       <section class="right-column">
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Rezervacija</div>
-              <div class="card-subtitle">
-                Užsirezervuok laiką tiesiogiai internetu.
-              </div>
+              <div class="card-subtitle">Užsirezervuok laiką tiesiogiai internetu.</div>
             </div>
             <span class="badge-service" id="selectedServiceBadge">
               <span>Paslauga: </span><strong>Standartinis kirpimas</strong>
             </span>
           </div>
-                  
+
           <div class="section-toggle">
-          <button class="toggle-btn active" data-pane="bookingPane">Laiko rezervacija</button>
-          <button class="toggle-btn" data-pane="summaryPane">Krepšelis &amp; suvestinė</button>
-          <button class="toggle-btn" data-pane="myBookingsPane">Mano rezervacijos</button>
+            <button class="toggle-btn active" data-pane="bookingPane">Laiko rezervacija</button>
+            <button class="toggle-btn" data-pane="summaryPane">Krepšelis &amp; suvestinė</button>
+            <button class="toggle-btn" data-pane="myBookingsPane">Mano rezervacijos</button>
           </div>
 
-          <!-- Mano rezervacijos pane -->
-<div id="myBookingsPane" class="hidden">
-  <div class="field-group">
-    <label class="label-small">Mano rezervacijos</label>
-    <div id="myBookingsStatus" class="helper">Prisijunk, kad matytum savo rezervacijas.</div>
-  </div>
+          <div id="myBookingsPane" class="hidden">
+            <div class="field-group">
+              <label class="label-small">Mano rezervacijos</label>
+              <div id="myBookingsStatus" class="helper">Prisijunk, kad matytum savo rezervacijas.</div>
+            </div>
+            <div id="myBookingsList" class="list"></div>
+            <div class="field-group" style="margin-top: 12px;">
+              <button id="refreshMyBookings" class="btn-outline">Atnaujinti</button>
+            </div>
+          </div>
 
-  <div id="myBookingsList" class="list"></div>
-
-  <div class="field-group" style="margin-top: 12px;">
-    <button id="refreshMyBookings" class="btn-outline">Atnaujinti</button>
-  </div>
-</div>
-          
-          <!-- Booking pane -->
-          
           <div id="bookingPane">
             <form id="bookingForm">
               <div class="field-group">
@@ -646,18 +428,17 @@
               </div>
 
               <div class="field-group field-inline">
-  <div>
-    <label for="dateInput">Data</label>
-    <input type="date" id="dateInput" required />
-  </div>
-  <div>
-    <label for="timeInput">Laikas</label>
-    <input type="time" id="timeInput" required />
-    <div class="helper">Darbo laikas: 10:00–20:00. Spausk ant laisvo laiko žemiau.</div>
-    <div id="timeSlots" class="time-slots"></div>
-  </div>
-</div>
-
+                <div>
+                  <label for="dateInput">Data</label>
+                  <input type="date" id="dateInput" required />
+                </div>
+                <div>
+                  <label for="timeInput">Laikas</label>
+                  <input type="time" id="timeInput" required />
+                  <div class="helper">Darbo laikas: 10:00–20:00. Spausk ant laisvo laiko žemiau.</div>
+                  <div id="timeSlots" class="time-slots"></div>
+                </div>
+              </div>
 
               <div class="field-group">
                 <label for="nameInput">Vardas</label>
@@ -668,11 +449,11 @@
                 <label for="phoneInput">Telefono numeris</label>
                 <input type="tel" id="phoneInput" placeholder="+370..." required />
               </div>
-              
-<div class="field-group">
-  <label for="emailInput">El. paštas (patvirtinimui)</label>
-  <input type="email" id="emailInput" placeholder="vardas@pastas.lt" />
-</div>
+
+              <div class="field-group">
+                <label for="emailInput">El. paštas (patvirtinimui)</label>
+                <input type="email" id="emailInput" placeholder="vardas@pastas.lt" />
+              </div>
 
               <div class="field-group">
                 <label for="noteInput">Komentaras (nebūtina)</label>
@@ -688,7 +469,6 @@
             </form>
           </div>
 
-          <!-- Summary pane -->
           <div id="summaryPane" class="hidden">
             <div class="field-group">
               <label class="label-small">Trumpa suvestinė</label>
@@ -723,7 +503,6 @@
     </footer>
   </div>
 
-  <!-- Cart modal -->
   <div id="cartModal" class="modal-backdrop hidden">
     <div class="modal">
       <div class="modal-header">
@@ -739,9 +518,7 @@
           <div class="label-small">Iš viso</div>
           <div class="total" id="cartTotal">0.00 €</div>
         </div>
-        <button class="btn-primary" id="checkoutBtn">
-          Tęsti užsakymą
-        </button>
+        <button class="btn-primary" id="checkoutBtn">Tęsti užsakymą</button>
       </div>
       <div id="cartInfo" class="helper">
         Apmokėjimo funkcija pavyzdyje nėra įdiegta – čia galėsi prijungti Paysera, PayPal ar bankinį apmokėjimą.
@@ -749,176 +526,25 @@
     </div>
   </div>
 
-  
- 
   <script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  // Tavo duomenys:
-  const SUPABASE_URL = "https://ovayawxvgownebxboqnx.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
+    const SUPABASE_URL = "https://ovayawxvgownebxboqnx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_YwvTCJKi_0hwmUPxXRqajQ_UNTfN9OA";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// =======================
-// AUTH (VIENAS BLOKAS)
-// =======================
-const loginBtn = document.getElementById("loginBtn");
-const loginEmail = document.getElementById("loginEmail");
-const authStatus = document.getElementById("authStatus");
-
-function setAuthStatus(msg) {
-  if (authStatus) authStatus.textContent = msg;
-  console.log("[AUTH]", msg);
-}
-
-async function handleAuthCallback() {
-  try {
-    const url = new URL(window.location.href);
-
-    // ✅ Naujas flow: ?code=...
-    if (url.searchParams.get("code")) {
-      setAuthStatus("Tvirtinam prisijungimą...");
-      const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
-      if (error) {
-        console.error("exchangeCodeForSession error:", error);
-        setAuthStatus("Klaida: " + error.message);
-        return;
-      }
-
-      // nuvalom ?code=... kad netrukdytų
-      url.searchParams.delete("code");
-      window.history.replaceState({}, document.title, url.toString());
-    }
-
-    // ✅ parodom statusą pagal session
-    const { data: sess } = await supabase.auth.getSession();
-    if (sess.session?.user) {
-      setAuthStatus("✅ Prisijungęs: " + sess.session.user.email);
-    } else {
-      setAuthStatus("Atsijungęs");
-    }
-  } catch (e) {
-    console.error("Auth callback error:", e);
-    setAuthStatus("Auth callback error (žiūrėk Console).");
-  }
-}
-
-// Paleidžiam vieną kartą
-handleAuthCallback();
-
-// Magic link siuntimas
-loginBtn?.addEventListener("click", async () => {
-  const email = loginEmail?.value?.trim();
-  if (!email) return setAuthStatus("Įvesk el. paštą.");
-
-  setAuthStatus("Siunčiamas prisijungimo laiškas...");
-
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
-    },
-  });
-
-  console.log("signInWithOtp:", { data, error });
-  if (error) setAuthStatus("Klaida: " + error.message);
-  else setAuthStatus("📩 Patikrink el. paštą (ir Spam) – paspausk nuorodą laiške.");
-});
-
-// Debug eventai + iš čia galim trigerinti "mano rezervacijos"
-supabase.auth.onAuthStateChange((event, session) => {
-  console.log("AUTH EVENT:", event, session?.user?.email || null);
-
-  if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
-    if (session?.user) {
-      // optional: loadMyBookings() kviesim kai perjungi į tab’ą arba čia
-      loadMyBookings();
-    }
-  }
-
-  if (event === "SIGNED_OUT") {
-    myBookingsList.innerHTML = "";
-    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
-    setAuthStatus("Atsijungęs");
-  }
-});
-
-// 2) Prisijungimo mygtukas (siunčia magic link)
-loginBtn?.addEventListener("click", async () => {
-  const email = loginEmail?.value?.trim();
-  if (!email) return setAuthStatus("Įvesk el. paštą.");
-
-  setAuthStatus("Siunčiamas prisijungimo laiškas...");
-
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: "https://justinas-pixel.github.io/barbershop/",
-    },
-  });
-
-  console.log("signInWithOtp:", { data, error });
-  if (error) setAuthStatus("Klaida: " + error.message);
-  else setAuthStatus("📩 Patikrink el. paštą (ir Spam) – ir paspausk nuorodą laiške.");
-});
-
-// 3) Eventai (debug)
-supabase.auth.onAuthStateChange((event, session) => {
-  console.log("AUTH EVENT:", event, session?.user?.email || null);
-
-  if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
-    if (session?.user) loadMyBookings();
-  }
-
-  if (event === "SIGNED_OUT") {
-    myBookingsList.innerHTML = "";
-    myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
-  }
-});
-    
-    // --- Demo data: produktai (kol kas laikom vietoje) ---
+    // --- Demo data: produktai ---
     const products = [
-      {
-        id: "pomade_matte",
-        name: "Matinė plaukų pomada",
-        price: 15.9,
-        size: "100 ml",
-        description: "Vidutinės fiksacijos, matinė apdaila.",
-        tags: ["Plaukams", "Matinė"]
-      },
-      {
-        id: "beard_oil",
-        name: "Barzdos aliejus",
-        price: 17.5,
-        size: "50 ml",
-        description: "Minkština ir drėkina barzdą bei odą.",
-        tags: ["Barzdai", "Drėkinimas"]
-      },
-      {
-        id: "shampoo",
-        name: "Kasdienis šampūnas",
-        price: 12.0,
-        size: "250 ml",
-        description: "Švelniai valo, be SLS.",
-        tags: ["Plaukams", "Kasdienis"]
-      },
-      {
-        id: "aftershave",
-        name: "Aftershave balzamas",
-        price: 14.5,
-        size: "100 ml",
-        description: "Ramindantis balzamas po skutimosi.",
-        tags: ["Skutimuisi", "Raminantis"]
-      }
+      { id: "pomade_matte", name: "Matinė plaukų pomada", price: 15.9, size: "100 ml", description: "Vidutinės fiksacijos, matinė apdaila.", tags: ["Plaukams","Matinė"] },
+      { id: "beard_oil", name: "Barzdos aliejus", price: 17.5, size: "50 ml", description: "Minkština ir drėkina barzdą bei odą.", tags: ["Barzdai","Drėkinimas"] },
+      { id: "shampoo", name: "Kasdienis šampūnas", price: 12.0, size: "250 ml", description: "Švelniai valo, be SLS.", tags: ["Plaukams","Kasdienis"] },
+      { id: "aftershave", name: "Aftershave balzamas", price: 14.5, size: "100 ml", description: "Ramindantis balzamas po skutimosi.", tags: ["Skutimuisi","Raminantis"] }
     ];
 
-    // Paslaugos ir meistrai bus imami iš Supabase
     let services = [];
     let barbers = [];
     let selectedServiceId = null;
 
-    // Krepšelis ir paskutinė rezervacija – dar localStorage
     let cart = JSON.parse(localStorage.getItem("barber_cart") || "[]");
     let lastBooking = JSON.parse(localStorage.getItem("barber_last_booking") || "null");
 
@@ -929,7 +555,6 @@ supabase.auth.onAuthStateChange((event, session) => {
     const cartModal = document.getElementById("cartModal");
     const cartItems = document.getElementById("cartItems");
     const cartTotal = document.getElementById("cartTotal");
-    const cartInfo = document.getElementById("cartInfo");
     const serviceSelect = document.getElementById("serviceSelect");
     const barberSelect = document.getElementById("barberSelect");
     const timeSlotsContainer = document.getElementById("timeSlots");
@@ -943,6 +568,10 @@ supabase.auth.onAuthStateChange((event, session) => {
     const yearSpan = document.getElementById("yearSpan");
     yearSpan.textContent = new Date().getFullYear();
 
+    const myBookingsList = document.getElementById("myBookingsList");
+    const myBookingsStatus = document.getElementById("myBookingsStatus");
+    const refreshMyBookings = document.getElementById("refreshMyBookings");
+
     // Tag'ai pagal paslaugos pavadinimą (tik UI grožiui)
     const tagsByServiceName = {
       "Standartinis kirpimas": ["Kirpimas", "Stilizacija"],
@@ -951,242 +580,304 @@ supabase.auth.onAuthStateChange((event, session) => {
       "Kirpimas + Barzda": ["Pilnas paketas"]
     };
 
-       // --- Helperiai ---
-    function pad2(n) {
-      return n.toString().padStart(2, "0");
-    }
+    // --- Helperiai ---
+    function pad2(n){ return n.toString().padStart(2,"0"); }
+    function formatTimeHHMM(date){ return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`; }
+    function formatPrice(value){ return value.toFixed(2).replace(".", ",") + " €"; }
 
-    function formatTimeHHMM(date) {
-      return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
-    }
+    function updateCartStorage(){ localStorage.setItem("barber_cart", JSON.stringify(cart)); }
+    function updateBookingStorage(){ if (lastBooking) localStorage.setItem("barber_last_booking", JSON.stringify(lastBooking)); }
 
-    function formatPrice(value) {
-      return value.toFixed(2).replace(".", ",") + " €";
-    }
-
-
-    function updateCartStorage() {
-      localStorage.setItem("barber_cart", JSON.stringify(cart));
-    }
-
-    function updateBookingStorage() {
-      if (lastBooking) {
-        localStorage.setItem("barber_last_booking", JSON.stringify(lastBooking));
-      }
-    }
-
-    function renderCartIndicator() {
+    function renderCartIndicator(){
       const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
       cartCount.textContent = totalQty;
     }
 
-    // --- Supabase užklausos ---
-    async function loadServicesFromSupabase() {
-      const { data, error } = await supabase
-        .from("services")
-        .select("*")
-        .order("price_eur", { ascending: true });
+    // =======================
+    // AUTH (VIENAS BLOKAS)
+    // =======================
+    const loginBtn = document.getElementById("loginBtn");
+    const loginEmail = document.getElementById("loginEmail");
+    const authStatus = document.getElementById("authStatus");
 
-      if (error) {
-        console.error("Nepavyko nuskaityti paslaugų iš Supabase:", error);
-        return;
-      }
+    function setAuthStatus(msg){
+      if (authStatus) authStatus.textContent = msg;
+      console.log("[AUTH]", msg);
+    }
 
-      services = data.map(row => {
-        const tags = tagsByServiceName[row.name] || [];
-        return {
-          id: row.id,
-          name: row.name,
-          duration: row.duration_minutes,
-          price: Number(row.price_eur),
-          description: row.description || "",
-          tags
-        };
-      });
+    async function handleAuthCallback(){
+      try {
+        const url = new URL(window.location.href);
 
-      if (!selectedServiceId && services.length > 0) {
-        selectedServiceId = services[0].id;
+        if (url.searchParams.get("code")) {
+          setAuthStatus("Tvirtinam prisijungimą...");
+          const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+          if (error) {
+            console.error("exchangeCodeForSession error:", error);
+            setAuthStatus("Klaida: " + error.message);
+            return;
+          }
+          url.searchParams.delete("code");
+          window.history.replaceState({}, document.title, url.toString());
+        }
+
+        const { data: sess } = await supabase.auth.getSession();
+        if (sess.session?.user) setAuthStatus("✅ Prisijungęs: " + sess.session.user.email);
+        else setAuthStatus("Atsijungęs");
+      } catch (e) {
+        console.error("Auth callback error:", e);
+        setAuthStatus("Auth klaida (žiūrėk Console).");
       }
     }
 
-    async function updateAvailableTimeSlots() {
-  const service = services.find(s => s.id === serviceSelect.value);
-  const barberId = barberSelect.value;
-  const date = dateInput.value;
+    handleAuthCallback();
 
-  if (!service || !barberId || !date) {
-    renderTimeSlots([]);
-    return;
-  }
+    loginBtn?.addEventListener("click", async () => {
+      const email = loginEmail?.value?.trim();
+      if (!email) return setAuthStatus("Įvesk el. paštą.");
 
-  const dayBookings = await getDayBookings(barberId, date);
-  const slots = generateSlotsForDay(service, date, dayBookings);
-  renderTimeSlots(slots);
-}
+      setAuthStatus("Siunčiamas prisijungimo laiškas...");
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: "https://justinas-pixel.github.io/barbershop/" },
+      });
 
-    async function loadBarbersFromSupabase() {
+      console.log("signInWithOtp:", { data, error });
+      if (error) setAuthStatus("Klaida: " + error.message);
+      else setAuthStatus("📩 Patikrink el. paštą (ir Spam) – paspausk nuorodą laiške.");
+    });
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log("AUTH EVENT:", event, session?.user?.email || null);
+
+      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
+        setAuthStatus("✅ Prisijungęs: " + session.user.email);
+        // automatiškai atnaujinam, jei žmogus jau atsidaręs "Mano rezervacijos"
+        if (!document.getElementById("myBookingsPane").classList.contains("hidden")) {
+          loadMyBookings();
+        }
+      }
+
+      if (event === "SIGNED_OUT") {
+        setAuthStatus("Atsijungęs");
+        myBookingsList?.replaceChildren();
+        if (myBookingsStatus) myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
+      }
+    });
+
+    // --- Supabase užklausos ---
+    async function loadServicesFromSupabase(){
+      const { data, error } = await supabase.from("services").select("*").order("price_eur", { ascending: true });
+      if (error) { console.error("Nepavyko nuskaityti paslaugų:", error); return; }
+
+      services = (data || []).map(row => ({
+        id: row.id,
+        name: row.name,
+        duration: row.duration_minutes,
+        price: Number(row.price_eur),
+        description: row.description || "",
+        tags: tagsByServiceName[row.name] || []
+      }));
+
+      if (!selectedServiceId && services.length > 0) selectedServiceId = services[0].id;
+    }
+
+    async function loadBarbersFromSupabase(){
       const { data, error } = await supabase
         .from("barbers")
         .select("*")
         .eq("is_active", true)
         .order("name", { ascending: true });
 
-      if (error) {
-        console.error("Nepavyko nuskaityti meistrų iš Supabase:", error);
+      if (error) { console.error("Nepavyko nuskaityti meistrų:", error); return; }
+      barbers = data || [];
+    }
+
+    async function getDayBookings(barberId, date){
+      if (!barberId || !date) return [];
+      const dayStart = new Date(`${date}T00:00:00`);
+      const dayEnd = new Date(`${date}T23:59:59`);
+
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("id, start_time, end_time, status")
+        .eq("barber_id", barberId)
+        .in("status", ["pending","confirmed"])
+        .gte("start_time", dayStart.toISOString())
+        .lte("start_time", dayEnd.toISOString());
+
+      if (error) { console.error("Nepavyko nuskaityti dienos rezervacijų:", error); return []; }
+      return data || [];
+    }
+
+    function generateSlotsForDay(service, date, dayBookings){
+      const slots = [];
+      if (!service || !date) return slots;
+
+      const openTime = "10:00";
+      const closeTime = "20:00";
+
+      let stepMinutes = 60;
+      if (service.duration === 30 || service.duration === 90) stepMinutes = 30;
+
+      const start = new Date(`${date}T${openTime}:00`);
+      const end = new Date(`${date}T${closeTime}:00`);
+
+      let current = new Date(start.getTime());
+      while (current.getTime() + service.duration * 60000 <= end.getTime()) {
+        const slotStart = new Date(current.getTime());
+        const slotEnd = new Date(current.getTime() + service.duration * 60000);
+
+        const overlaps = (dayBookings || []).some(b => {
+          const bStart = new Date(b.start_time);
+          const bEnd = new Date(b.end_time);
+          return bStart < slotEnd && bEnd > slotStart;
+        });
+
+        slots.push({ start: slotStart, end: slotEnd, available: !overlaps });
+        current = new Date(current.getTime() + stepMinutes * 60000);
+      }
+
+      return slots;
+    }
+
+    function renderTimeSlots(slots){
+      timeSlotsContainer.innerHTML = "";
+      if (!slots || slots.length === 0) {
+        timeSlotsContainer.innerHTML = '<div class="helper">Pasirink paslaugą, meistrą ir datą.</div>';
         return;
       }
 
-      barbers = data || [];
-    }
-    async function getDayBookings(barberId, date) {
-  if (!barberId || !date) return [];
+      slots.forEach(slot => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "slot-btn";
+        const label = formatTimeHHMM(slot.start);
+        btn.textContent = label;
 
-  const dayStart = new Date(`${date}T00:00:00`);
-  const dayEnd = new Date(`${date}T23:59:59`);
-
-  const { data, error } = await supabase
-    .from("bookings")
-    .select("id, start_time, end_time, status")
-    .eq("barber_id", barberId)
-    .in("status", ["pending", "confirmed"])
-    .gte("start_time", dayStart.toISOString())
-    .lte("start_time", dayEnd.toISOString());
-
-  if (error) {
-    console.error("Nepavyko nuskaityti dienos rezervacijų:", error);
-    return [];
-  }
-
-  return data || [];
-}
-
- function generateSlotsForDay(service, date, dayBookings) {
-  const slots = [];
-  if (!service || !date) return slots;
-
-  const openTime = "10:00";  // darbo pradžia
-  const closeTime = "20:00"; // darbo pabaiga
-
-  // 60 min paslaugoms – kas valandą
-  // 30 min ir 90 min – kas pusvalandį
-  let stepMinutes = 60;
-  if (service.duration === 30 || service.duration === 90) {
-    stepMinutes = 30;
-  }
-
-  const start = new Date(`${date}T${openTime}:00`);
-  const end = new Date(`${date}T${closeTime}:00`);
-
-  let current = new Date(start.getTime());
-
-  while (current.getTime() + service.duration * 60000 <= end.getTime()) {
-    const slotStart = new Date(current.getTime());
-    const slotEnd = new Date(current.getTime() + service.duration * 60000);
-
-    const overlaps = dayBookings.some(b => {
-      const bStart = new Date(b.start_time);
-      const bEnd = new Date(b.end_time);
-      return bStart < slotEnd && bEnd > slotStart;
-    });
-
-    slots.push({
-      start: slotStart,
-      end: slotEnd,
-      available: !overlaps
-    });
-
-    // judam per pasirinktą žingsnį (valanda arba pusvalandis)
-    current = new Date(current.getTime() + stepMinutes * 60000);
-  }
-
-  return slots;
-}
-
-
-  
-
-   // Surandam esamą klientą pagal telefoną arba sukuriam naują
-async function findOrCreateCustomer(name, phone, email) {
-  const { data: existing, error: findError } = await supabase
-    .from("customers")
-    .select("*")
-    .eq("phone", phone)
-    .limit(1);
-
-  if (findError) {
-    console.error("Klaida tikrinant klientą:", findError);
-    throw new Error("Nepavyko patikrinti kliento");
-  }
-
-  if (existing && existing.length > 0) {
-    const customer = existing[0];
-
-    const updates = {};
-    if (customer.name !== name) updates.name = name;
-    if (email && customer.email !== email) updates.email = email;
-
-    if (Object.keys(updates).length > 0) {
-      await supabase
-        .from("customers")
-        .update(updates)
-        .eq("id", customer.id);
-    }
-
-    return customer;
-  }
-
-  const { data: inserted, error: insertError } = await supabase
-    .from("customers")
-    .insert({ name, phone, email })
-    .select()
-    .single();
-
-  if (insertError) {
-    console.error(insertError);
-    throw new Error("Nepavyko išsaugoti kliento");
-  }
-
-  return inserted;
-}
-
-
-function renderTimeSlots(slots) {
-  timeSlotsContainer.innerHTML = "";
-
-  if (!slots || slots.length === 0) {
-    timeSlotsContainer.innerHTML = '<div class="helper">Pasirink paslaugą, meistrą ir datą.</div>';
-    return;
-  }
-
-  slots.forEach(slot => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "slot-btn";
-    const label = formatTimeHHMM(slot.start);
-
-    btn.textContent = label;
-
-    if (!slot.available) {
-      btn.classList.add("busy");
-      btn.disabled = true;
-    } else {
-      btn.addEventListener("click", () => {
-        // nuimam ankstesnį pasirinkimą
-        timeSlotsContainer.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("selected"));
-        btn.classList.add("selected");
-
-        // nustatom <input type="time"> reikšmę
-        timeInput.value = label;
+        if (!slot.available) {
+          btn.classList.add("busy");
+          btn.disabled = true;
+        } else {
+          btn.addEventListener("click", () => {
+            timeSlotsContainer.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            timeInput.value = label;
+          });
+        }
+        timeSlotsContainer.appendChild(btn);
       });
     }
 
-    timeSlotsContainer.appendChild(btn);
-  });
-}
-  
+    async function updateAvailableTimeSlots(){
+      const service = services.find(s => s.id === serviceSelect.value);
+      const barberId = barberSelect.value;
+      const date = dateInput.value;
+
+      if (!service || !barberId || !date) return renderTimeSlots([]);
+      const dayBookings = await getDayBookings(barberId, date);
+      const slots = generateSlotsForDay(service, date, dayBookings);
+      renderTimeSlots(slots);
+    }
+
+    // Surandam esamą klientą pagal telefoną arba sukuriam naują
+    async function findOrCreateCustomer(name, phone, email){
+      const { data: existing, error: findError } = await supabase
+        .from("customers")
+        .select("*")
+        .eq("phone", phone)
+        .limit(1);
+
+      if (findError) { console.error("Klaida tikrinant klientą:", findError); throw new Error("Nepavyko patikrinti kliento"); }
+
+      if (existing && existing.length > 0) {
+        const customer = existing[0];
+        const updates = {};
+        if (customer.name !== name) updates.name = name;
+        if (email && customer.email !== email) updates.email = email;
+
+        if (Object.keys(updates).length > 0) {
+          await supabase.from("customers").update(updates).eq("id", customer.id);
+        }
+        return customer;
+      }
+
+      const { data: inserted, error: insertError } = await supabase
+        .from("customers")
+        .insert({ name, phone, email })
+        .select()
+        .single();
+
+      if (insertError) { console.error(insertError); throw new Error("Nepavyko išsaugoti kliento"); }
+      return inserted;
+    }
+
+    // =======================
+    // Mano rezervacijos
+    // =======================
+    async function loadMyBookings(){
+      if (!myBookingsList || !myBookingsStatus) return;
+
+      myBookingsStatus.textContent = "Kraunama...";
+      myBookingsList.innerHTML = "";
+
+      const { data: sess } = await supabase.auth.getSession();
+      const user = sess.session?.user;
+
+      if (!user) {
+        myBookingsStatus.textContent = "Prisijunk, kad matytum savo rezervacijas.";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(`
+          id, start_time, end_time, status, note,
+          services ( name, duration_minutes, price_eur ),
+          barbers ( name ),
+          customers!inner ( user_id )
+        `)
+        .eq("customers.user_id", user.id)
+        .order("start_time", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        myBookingsStatus.textContent = "Nepavyko užkrauti: " + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        myBookingsStatus.textContent = "Rezervacijų nerasta.";
+        return;
+      }
+
+      myBookingsStatus.textContent = `Rasta rezervacijų: ${data.length}`;
+
+      data.forEach(b => {
+        const d = new Date(b.start_time);
+        const dateStr = d.toISOString().slice(0, 10);
+        const timeStr = d.toTimeString().slice(0, 5);
+
+        const serviceName = b.services?.name || "—";
+        const barberName = b.barbers?.name || "—";
+
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.innerHTML = `
+          <div class="list-item-main">
+            <div class="list-item-title">${dateStr} ${timeStr} • ${serviceName}</div>
+            <div class="list-item-meta">Meistras: ${barberName} • Statusas: ${b.status}</div>
+            ${b.note ? `<div class="list-item-meta">Komentaras: ${b.note}</div>` : ""}
+          </div>
+        `;
+        myBookingsList.appendChild(item);
+      });
+    }
+
+    refreshMyBookings?.addEventListener("click", loadMyBookings);
 
     // --- UI renderinimas ---
-    function renderServices() {
+    function renderServices(){
       servicesList.innerHTML = "";
       if (services.length === 0) {
         servicesList.innerHTML = '<div class="helper">Paslaugų sąrašas dar tuščias.</div>';
@@ -1252,12 +943,11 @@ function renderTimeSlots(slots) {
 
         item.appendChild(main);
         item.appendChild(right);
-
         servicesList.appendChild(item);
       });
     }
 
-    function renderProducts() {
+    function renderProducts(){
       productsList.innerHTML = "";
       products.forEach(product => {
         const item = document.createElement("div");
@@ -1312,12 +1002,11 @@ function renderTimeSlots(slots) {
 
         item.appendChild(main);
         item.appendChild(right);
-
         productsList.appendChild(item);
       });
     }
 
-    function populateServiceSelect() {
+    function populateServiceSelect(){
       serviceSelect.innerHTML = "";
       services.forEach(s => {
         const option = document.createElement("option");
@@ -1330,7 +1019,7 @@ function renderTimeSlots(slots) {
       }
     }
 
-    function populateBarberSelect() {
+    function populateBarberSelect(){
       barberSelect.innerHTML = "";
       const placeholder = document.createElement("option");
       placeholder.value = "";
@@ -1345,37 +1034,36 @@ function renderTimeSlots(slots) {
       });
     }
 
-    function updateSelectedServiceUI() {
+    function updateSelectedServiceUI(){
       if (!selectedServiceId) return;
       const service = services.find(s => s.id === selectedServiceId);
       if (!service) return;
       selectedServiceBadge.textContent = service.name;
       serviceSelect.value = selectedServiceId;
+      updateAvailableTimeSlots();
     }
 
-    function addToCart(productId) {
+    function addToCart(productId){
       const product = products.find(p => p.id === productId);
       if (!product) return;
       const existing = cart.find(i => i.id === productId);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
-      }
+      if (existing) existing.qty += 1;
+      else cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+
       updateCartStorage();
       renderCartIndicator();
       renderSummary();
     }
 
-    function renderCartModal() {
+    function renderCartModal(){
       cartItems.innerHTML = "";
       if (cart.length === 0) {
         cartItems.innerHTML = '<div class="helper">Krepšelis tuščias.</div>';
         cartTotal.textContent = formatPrice(0);
         return;
       }
-      let total = 0;
 
+      let total = 0;
       cart.forEach(item => {
         const row = document.createElement("div");
         row.className = "cart-item";
@@ -1402,18 +1090,18 @@ function renderTimeSlots(slots) {
 
         const qty = document.createElement("div");
         qty.className = "qty";
+
         const minus = document.createElement("button");
         minus.textContent = "−";
         minus.addEventListener("click", () => {
           item.qty -= 1;
-          if (item.qty <= 0) {
-            cart = cart.filter(i => i.id !== item.id);
-          }
+          if (item.qty <= 0) cart = cart.filter(i => i.id !== item.id);
           updateCartStorage();
           renderCartIndicator();
           renderCartModal();
           renderSummary();
         });
+
         const plus = document.createElement("button");
         plus.textContent = "+";
         plus.addEventListener("click", () => {
@@ -1423,8 +1111,10 @@ function renderTimeSlots(slots) {
           renderCartModal();
           renderSummary();
         });
+
         const qtyLabel = document.createElement("span");
         qtyLabel.textContent = item.qty;
+
         qty.appendChild(minus);
         qty.appendChild(qtyLabel);
         qty.appendChild(plus);
@@ -1439,7 +1129,6 @@ function renderTimeSlots(slots) {
 
         row.appendChild(main);
         row.appendChild(right);
-
         cartItems.appendChild(row);
 
         total += linePrice;
@@ -1448,7 +1137,7 @@ function renderTimeSlots(slots) {
       cartTotal.textContent = formatPrice(total);
     }
 
-    function renderSummary() {
+    function renderSummary(){
       if (lastBooking) {
         const { name, phone, date, time, serviceName, barberName } = lastBooking;
         summaryContent.innerHTML = `
@@ -1458,19 +1147,17 @@ function renderTimeSlots(slots) {
           Klientas: ${name} (${phone})
         `;
       } else {
-        summaryContent.textContent =
-          "Dar nėra rezervacijų. Užpildyk formą, ir čia matysi savo artimiausią vizitą.";
+        summaryContent.textContent = "Dar nėra rezervacijų. Užpildyk formą, ir čia matysi savo artimiausią vizitą.";
       }
 
-      if (cart.length === 0) {
-        summaryTotal.textContent = "Krepšelis tuščias.";
-      } else {
+      if (cart.length === 0) summaryTotal.textContent = "Krepšelis tuščias.";
+      else {
         const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
         summaryTotal.textContent = `Prekių krepšelis: ${formatPrice(total)}`;
       }
     }
 
-    // --- Event listeneriai ---
+    // --- Navigation ---
     document.querySelectorAll(".nav-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -1492,24 +1179,16 @@ function renderTimeSlots(slots) {
         }
       });
     });
-    // Paslaugos pasirinkimas – atnaujinam UI ir laisvus laikus
-serviceSelect.addEventListener("change", () => {
-  selectedServiceId = serviceSelect.value;
-  updateSelectedServiceUI();
-  updateAvailableTimeSlots(); // 👈 čia kviečiam mūsų funkciją
-});
 
-// Meistro pasirinkimas – atnaujinam laisvus laikus
-barberSelect.addEventListener("change", () => {
-  updateAvailableTimeSlots();
-});
+    // Paslaugos / meistro / datos pasirinkimai -> slotai
+    serviceSelect.addEventListener("change", () => {
+      selectedServiceId = serviceSelect.value;
+      updateSelectedServiceUI();
+    });
+    barberSelect.addEventListener("change", updateAvailableTimeSlots);
+    dateInput.addEventListener("change", updateAvailableTimeSlots);
 
-// Datos pasirinkimas – atnaujinam laisvus laikus
-dateInput.addEventListener("change", () => {
-  updateAvailableTimeSlots();
-});
-
-
+    // Toggle pane (ir jei atidarai "Mano rezervacijos" -> load)
     document.querySelectorAll(".toggle-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
@@ -1518,7 +1197,10 @@ dateInput.addEventListener("change", () => {
         const pane = btn.dataset.pane;
         document.getElementById("bookingPane").classList.add("hidden");
         document.getElementById("summaryPane").classList.add("hidden");
+        document.getElementById("myBookingsPane").classList.add("hidden");
         document.getElementById(pane).classList.remove("hidden");
+
+        if (pane === "myBookingsPane") loadMyBookings();
       });
     });
 
@@ -1526,230 +1208,183 @@ dateInput.addEventListener("change", () => {
       cartModal.classList.remove("hidden");
       renderCartModal();
     });
+    document.getElementById("closeCart").addEventListener("click", () => cartModal.classList.add("hidden"));
+    cartModal.addEventListener("click", (e) => { if (e.target === cartModal) cartModal.classList.add("hidden"); });
 
-    document.getElementById("closeCart").addEventListener("click", () => {
-      cartModal.classList.add("hidden");
-    });
+    // --- Booking submit ---
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("bookingStatus");
+      status.textContent = "";
+      status.className = "status";
 
-    cartModal.addEventListener("click", (e) => {
-      if (e.target === cartModal) {
-        cartModal.classList.add("hidden");
+      const submitBtn = e.target.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Pateikiama...";
+
+      try {
+        const service = services.find(s => s.id === serviceSelect.value);
+        const barberId = barberSelect.value;
+        const barber = barbers.find(b => b.id === barberId);
+        const date = dateInput.value;
+        const time = timeInput.value;
+
+        const name = document.getElementById("nameInput").value.trim();
+        const phone = document.getElementById("phoneInput").value.trim();
+        const email = document.getElementById("emailInput").value.trim() || null;
+        const note = document.getElementById("noteInput").value.trim();
+
+        if (!service || !barber || !date || !time || !name || !phone) {
+          status.textContent = "Užpildyk visus privalomus laukus.";
+          status.classList.add("error");
+          return;
+        }
+
+        const startDateTime = new Date(`${date}T${time}:00`);
+        const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
+
+        // konfliktai
+        const { data: conflicts, error: conflictError } = await supabase
+          .from("bookings")
+          .select("id, start_time, end_time")
+          .eq("barber_id", barber.id)
+          .in("status", ["pending", "confirmed"])
+          .lt("start_time", endDateTime.toISOString())
+          .gt("end_time", startDateTime.toISOString());
+
+        if (conflictError) {
+          console.error(conflictError);
+          status.textContent = "Nepavyko patikrinti laiko užimtumo. Bandyk dar kartą.";
+          status.classList.add("error");
+          return;
+        }
+        if (conflicts && conflicts.length > 0) {
+          status.textContent = "Šis meistras šiuo laiku jau turi rezervaciją. Pasirink kitą laiką.";
+          status.classList.add("error");
+          return;
+        }
+
+        // customer pagal auth jei prisijungęs
+        const { data: sess } = await supabase.auth.getSession();
+        const user = sess?.session?.user;
+
+        let customer = null;
+
+        if (user) {
+          const { data: c1, error: e1 } = await supabase
+            .from("customers")
+            .select("*")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (e1) throw e1;
+
+          if (c1) {
+            customer = c1;
+            const { error: uErr } = await supabase
+              .from("customers")
+              .update({
+                name: name || customer.name,
+                phone: phone || customer.phone,
+                email: user.email || email || customer.email,
+              })
+              .eq("id", customer.id);
+
+            if (uErr) throw uErr;
+          } else {
+            const { data: c2, error: e2 } = await supabase
+              .from("customers")
+              .insert({ user_id: user.id, name, phone, email: user.email || email })
+              .select()
+              .single();
+
+            if (e2) throw e2;
+            customer = c2;
+          }
+        } else {
+          customer = await findOrCreateCustomer(name, phone, email);
+        }
+
+        if (!customer?.id) {
+          status.textContent = "Nepavyko nustatyti kliento profilio.";
+          status.classList.add("error");
+          return;
+        }
+
+        // VIENINTELIS insert
+        const { data: booking, error: bookingError } = await supabase
+          .from("bookings")
+          .insert({
+            customer_id: customer.id,
+            barber_id: barber.id,
+            service_id: service.id,
+            start_time: startDateTime.toISOString(),
+            end_time: endDateTime.toISOString(),
+            status: "pending",
+            note,
+          })
+          .select()
+          .single();
+
+        if (bookingError) {
+          console.error(bookingError);
+          status.textContent = "Nepavyko išsaugoti rezervacijos.";
+          status.classList.add("error");
+          return;
+        }
+
+        lastBooking = {
+          id: booking.id,
+          serviceName: service.name,
+          barberName: barber.name,
+          date,
+          time,
+          name,
+          phone,
+          note,
+        };
+        updateBookingStorage();
+        renderSummary();
+        updateAvailableTimeSlots();
+
+        // email edge function (optional)
+        try {
+          await fetch(
+            "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                toEmail: email || "justinas.vaickus@gmail.com",
+                toName: name,
+                phone,
+                date,
+                time,
+                serviceName: service.name,
+                barberName: barber.name,
+                note,
+              }),
+            }
+          );
+        } catch (err) {
+          console.error("Klaida siunčiant patvirtinimo email:", err);
+        }
+
+        status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
+        status.classList.add("success");
+      } catch (err) {
+        console.error(err);
+        status.textContent = "⚠ Įvyko klaida. Bandyk dar kartą.";
+        status.classList.add("error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Patvirtinti rezervaciją";
       }
     });
 
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const status = document.getElementById("bookingStatus");
-  status.textContent = "";
-  status.className = "status";
-
-  const submitBtn = e.target.querySelector("button[type='submit']");
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Pateikiama...";
-
-  try {
-    const service = services.find(s => s.id === serviceSelect.value);
-    const barberId = barberSelect.value;
-    const barber = barbers.find(b => b.id === barberId);
-    const date = dateInput.value;
-    const time = timeInput.value;
-    const name = document.getElementById("nameInput").value.trim();
-const phone = document.getElementById("phoneInput").value.trim();
-const email = document.getElementById("emailInput").value.trim() || null;
-    const note = document.getElementById("noteInput").value.trim();
-
-    if (!service || !barber || !date || !time || !name || !phone) {
-      status.textContent = "Užpildyk visus privalomus laukus.";
-      status.classList.add("error");
-      return;
-    }
-
-    // 1. Suskaičiuojam laiką
-    const startDateTime = new Date(`${date}T${time}:00`);
-    const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
-
-    // 2. Patikrinam, ar meistras tuo laiku laisvas
-    const { data: conflicts, error: conflictError } = await supabase
-      .from("bookings")
-      .select("id, start_time, end_time")
-      .eq("barber_id", barber.id)
-      .in("status", ["pending", "confirmed"])
-      .lt("start_time", endDateTime.toISOString())
-      .gt("end_time", startDateTime.toISOString());
-
-    if (conflictError) {
-      console.error(conflictError);
-      status.textContent = "Nepavyko patikrinti laiko užimtumo. Bandyk dar kartą.";
-      status.classList.add("error");
-      return;
-    }
-
-    if (conflicts && conflicts.length > 0) {
-      status.textContent = "Šis meistras šiuo laiku jau turi rezervaciją. Pasirink kitą laiką.";
-      status.classList.add("error");
-      return;
-    }
-
- // 3) Susitvarkom customer (pagal auth, jei prisijungęs)
-const { data: sess } = await supabase.auth.getSession();
-const user = sess?.session?.user;
-
-let customer = null;
-
-if (user) {
-  const { data: c1, error: e1 } = await supabase
-    .from("customers")
-    .select("*")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (e1) throw e1;
-
-  if (c1) {
-    customer = c1;
-
-    const { error: uErr } = await supabase
-      .from("customers")
-      .update({
-        name: name || customer.name,
-        phone: phone || customer.phone,
-        email: user.email || email || customer.email,
-      })
-      .eq("id", customer.id);
-
-    if (uErr) throw uErr;
-  } else {
-    const { data: c2, error: e2 } = await supabase
-      .from("customers")
-      .insert({
-        user_id: user.id,
-        name,
-        phone,
-        email: user.email || email,
-      })
-      .select()
-      .single();
-
-    if (e2) throw e2;
-    customer = c2;
-  }
-} else {
-  // neprisijungęs – senas flow pagal phone/email
-  customer = await findOrCreateCustomer(name, phone, email);
-}
-
-if (!customer?.id) {
-  status.textContent = "Nepavyko nustatyti kliento profilio.";
-  status.classList.add("error");
-  return;
-}
-
-// 4) VIENINTELIS bookings.insert
-const { data: booking, error: bookingError } = await supabase
-  .from("bookings")
-  .insert({
-    customer_id: customer.id,
-    barber_id: barber.id,
-    service_id: service.id,
-    start_time: startDateTime.toISOString(),
-    end_time: endDateTime.toISOString(),
-    status: "pending",
-    note,
-  })
-  .select()
-  .single();
-
-// 5) Sukuriam rezervaciją (ČIA VIENINTELIS bookings.insert)
-const { data: booking, error: bookingError } = await supabase
-  .from("bookings")
-  .insert({
-    customer_id: customer.id,
-    barber_id: barber.id,
-    service_id: service.id,
-    start_time: startDateTime.toISOString(),
-    end_time: endDateTime.toISOString(),
-    status: "pending",
-    note,
-  })
-  .select()
-  .single();
-
-if (bookingError) {
-  console.error(bookingError);
-  status.textContent = "Nepavyko išsaugoti rezervacijos.";
-  status.classList.add("error");
-  return;
-}
-
-// 6) Atnaujinam vietinę suvestinę
-lastBooking = {
-  id: booking.id,
-  serviceName: service.name,
-  barberName: barber.name,
-  date,
-  time,
-  name,
-  phone,
-  note,
-};
-updateBookingStorage();
-renderSummary();
-
-// 6. Iškviečiam edge funkciją (email patvirtinimas) – jei nepavyksta, rezervacija vistiek lieka
-try {
-  const res = await fetch(
-    "https://ovayawxvgownebxboqnx.supabase.co/functions/v1/send-booking-confirmation",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-        // kol kas NENAUDOK Authorization/apikey (CORS)
-      },
-      body: JSON.stringify({
-        toEmail: email || "justinas.vaickus@gmail.com",
-        toName: name,
-        phone,
-        date,
-        time,
-        serviceName: service.name,
-        barberName: barber.name,
-        note,
-      }),
-    }
-  );
-
-  // jei nori – pamatyk atsakymą:
-  // console.log("Email funkcijos atsakymas:", await res.text());
-} catch (err) {
-  console.error("Klaida siunčiant patvirtinimo email:", err);
-}
-
-
-
-      // kliento nebaidom – rezervacija jau sėkminga, laiškas tiesiog nepavyko
-  
-    
-    status.textContent = "🎉 Rezervacija sėkmingai išsaugota!";
-    status.classList.add("success");
-  } catch (err) {
-    console.error(err);
-    status.textContent = "⚠ Įvyko klaida. Bandyk dar kartą.";
-    status.classList.add("error");
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Patvirtinti rezervaciją";
-  }
-});
-
-
-
-    // --- Inicijavimas ---
-    async function init() {
-      // Supabase duomenys
-      await Promise.all([
-        loadServicesFromSupabase(),
-        loadBarbersFromSupabase()
-      ]);
+    // --- Init ---
+    async function init(){
+      await Promise.all([loadServicesFromSupabase(), loadBarbersFromSupabase()]);
 
       renderServices();
       renderProducts();
@@ -1758,128 +1393,16 @@ try {
       updateSelectedServiceUI();
       renderCartIndicator();
       renderSummary();
-      
-  if (error) {
-    alert(error.message);
-  } else {
-    alert("📩 Patikrink el. paštą (prisijungimo nuoroda).");
-  }
-}
-async function loginWithGoogle() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: "https://justinas-pixel.github.io/barbershop/",
-    },
-  });
 
-  if (error) alert(error.message);
-}
-
-    // bandome rasti customer pagal email
-    const { data: existing } = await supabase
-      .from("customers")
-      .select("*")
-      .eq("email", user.email)
-      .limit(1);
-
-    if (existing && existing.length > 0) {
-      await supabase
-        .from("customers")
-        .update({ user_id: user.id })
-        .eq("id", existing[0].id);
-    }
-  }
-});
-      
       // datai – min = šiandien
-      const dateInput = document.getElementById("dateInput");
       const today = new Date().toISOString().split("T")[0];
       dateInput.min = today;
+
+      // jei jau pasirinkta data ir meistras/paslauga — rodykim laikus
+      updateAvailableTimeSlots();
     }
 
     init();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
