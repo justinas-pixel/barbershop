@@ -620,6 +620,20 @@
           <button class="toggle-btn" data-pane="summaryPane">Krepšelis &amp; suvestinė</button>
           <button class="toggle-btn" data-pane="myBookingsPane">Mano rezervacijos</button>
           </div>
+
+          <!-- Mano rezervacijos pane -->
+<div id="myBookingsPane" class="hidden">
+  <div class="field-group">
+    <label class="label-small">Mano rezervacijos</label>
+    <div id="myBookingsStatus" class="helper">Prisijunk, kad matytum savo rezervacijas.</div>
+  </div>
+
+  <div id="myBookingsList" class="list"></div>
+
+  <div class="field-group" style="margin-top: 12px;">
+    <button id="refreshMyBookings" class="btn-outline">Atnaujinti</button>
+  </div>
+</div>
           
           <!-- Booking pane -->
           
@@ -1730,6 +1744,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   </script>
 </body>
 </html>
+
 
 
 
