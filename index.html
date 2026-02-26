@@ -1312,19 +1312,19 @@
         }
 
         // VIENINTELIS insert
-        const { data: booking, error: bookingError } = await supabase
-          .from("bookings")
-          .insert({
-            customer_id: customer.id,
-            barber_id: barber.id,
-            service_id: service.id,
-            start_time: startDateTime.toISOString(),
-            end_time: endDateTime.toISOString(),
-            status: "pending",
-            note,
-          })
-          .select()
-          .single();
+      const { data: createdBooking, error: bookingError } = await supabase
+  .from("bookings")
+  .insert({
+    customer_id: customer.id,
+    barber_id: barber.id,
+    service_id: service.id,
+    start_time: startDateTime.toISOString(),
+    end_time: endDateTime.toISOString(),
+    status: "pending",
+    note,
+  })
+  .select()
+  .single();
 
         if (bookingError) {
           console.error(bookingError);
@@ -1406,3 +1406,4 @@
   </script>
 </body>
 </html>
+
