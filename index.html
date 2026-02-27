@@ -908,16 +908,32 @@
   const item = document.createElement("div");
   item.className = "list-item";
 
-  // kairė info
-  const main = document.createElement("div");
-  main.className = "list-item-main";
-  main.innerHTML = `
-    <div class="list-item-title">${dateStr} ${timeStr} • ${serviceName}</div>
-    <div class="list-item-meta">Meistras: ${barberName} • Statusas: ${b.status}</div>
-    ${b.note ? `<div class="list-item-meta">Komentaras: ${b.note}</div>` : ""}
-  `;
+// kairė info
+const main = document.createElement("div");
+main.className = "list-item-main";
 
-  item.appendChild(main);
+// nustatom status spalvą
+const statusClass =
+  b.status === "confirmed"
+    ? "status-confirmed"
+    : b.status === "pending"
+    ? "status-pending"
+    : "status-cancelled";
+
+main.innerHTML = `
+  <div class="list-item-title">
+    ${dateStr} ${timeStr} • ${serviceName}
+    <span class="status-badge ${statusClass}">
+      ${b.status}
+    </span>
+  </div>
+  <div class="list-item-meta">
+    Meistras: ${barberName}
+  </div>
+  ${b.note ? `<div class="list-item-meta">Komentaras: ${b.note}</div>` : ""}
+`;
+
+item.appendChild(main);
 
   // dešinė: atšaukti
   if (canCancel) {
@@ -1497,6 +1513,7 @@
   </script>
 </body>
 </html>
+
 
 
 
