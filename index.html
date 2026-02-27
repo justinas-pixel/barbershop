@@ -920,11 +920,18 @@ const statusClass =
     ? "status-pending"
     : "status-cancelled";
 
+const statusLabel =
+  b.status === "confirmed"
+    ? "Patvirtinta"
+    : b.status === "pending"
+    ? "Laukia patvirtinimo"
+    : "Atšaukta";
+
 main.innerHTML = `
   <div class="list-item-title">
     ${dateStr} ${timeStr} • ${serviceName}
     <span class="status-badge ${statusClass}">
-      ${b.status}
+      ${statusLabel}
     </span>
   </div>
   <div class="list-item-meta">
@@ -1517,6 +1524,7 @@ item.appendChild(main);
   </script>
 </body>
 </html>
+
 
 
 
